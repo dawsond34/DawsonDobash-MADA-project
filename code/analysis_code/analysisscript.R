@@ -8,6 +8,8 @@
 library(ggplot2) #for plotting
 library(broom) #for cleaning up output from lm()
 library(here) #for data loading/saving
+library(tidyverse)
+
 
 #path to data
 #note the use of the here() package and not absolute paths

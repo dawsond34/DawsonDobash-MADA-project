@@ -1,7 +1,7 @@
 ---
-title: "Example Manuscript Template for a Data Analysis Project"
+title: "MADA Project Manuscript"
 subtitle: ""
-author: Andreas Handel
+author: Dawson Dobash
 date: "`r Sys.Date()`"
 site: bookdown::bookdown_site
 documentclass: article
@@ -15,7 +15,6 @@ bibliography: ../references.bib
 csl: ../apa.csl
 ---
 
-The structure below is a possible setup for a data analysis project (including the course project). For a manuscript, adjust as needed.
 
 
 # Summary/Abstract
@@ -25,15 +24,31 @@ _Write a summary of your project._
 # Introduction 
 
 ## General Background Information
-_Provide enough background on your topic that others can understand the why and how of your analysis_ 
+COVID-19 hit the world by storm and is a possible ever-lasting change to the way society acts. It also had an impact on each countries funding towards health care. Actions within the past two years have been taken to help fight against this virus. 
 
 ## Description of data and data source
-_Describe what the data is, what it contains, where it is from, etc. Eventually this might be part of a methods section._
+The data I plan on using is from a mixture of locations. Two sources are from kaggle.com and the other is from the Organisation for Economic Co-operation and Development (OECD) website. My data consists of eight data sets with information over each country in the world (for those that data was collected for). Six of these data sets provide the same information just for different countries where each data set is a different region. There is a data set that includes all of the countries but I want to include a region indicator variable for each country. These data sets includes total covid-19 cases, active cases, total deaths, total recovered, total tests, and population size. This data was updated on kaggle as of Sept 16th. Another data set I am using is a vaccination data set for each country. This is also data as of Sept. 16th. Finally, the last data set is of each countries healthcare funding for the past 4-5 years. Some countries provide 2020 data but others only provide up to 2019.
+
+I plan on combining the data sets into one with the variable combining them all is the country. If there are missing data within the variables used in analysis, I will exclude those countries. Ill have to change the raw data as one data set uses 3 letter abbreviations for countries while the others use the whole name of the country. There will be a lot of cleaning for this data just to make it as I want it.
+
+I included 3 data sets out of the 8 within the processingscript for now because one shows the same information as the other data sets not included just in a different region of the world. This is just to show the data I will be using.  
+
+I plan on trying to find more information/data sets about some demographics data for the countries like type of government and an indicator for developed vs. developing countries.
+
+Links to the locations I received the data are below:
+
+https://data.oecd.org/healthres/health-spending.htm
+
+https://www.kaggle.com/iamsouravbanerjee/covid19-dataset-world-and-continent-wise?select=Covid+Data+-+World.csv
+
+https://www.kaggle.com/anandhuh/latest-worldwide-vaccine-data
 
 ## Questions/Hypotheses to be addressed
-_State the research questions you plan to answer with this analysis._
+Since this data is cumulative and does not break down the amount of cases per month per country, I want to compare the recovery proportion to the death proportion and if this difference is based on variables such as the number of vaccines pushed out to society, the amount of funding the health care system has, the amount of tests taken. I also plan on adding more information as state in the description of data section. This will hopefully show if the amount of health care support really helps patients recover.
 
-
+Some issues I can run into are: 
+1) Developed countries might have more cases as they are in contact with the world more as travelers commonly travel to certain countries. Therefore could show an inverse relationship to what I expect with more developed countries have more recoveries. 
+2) Unknown dates of when a country received vaccines.
 
 # Methods and Results
 

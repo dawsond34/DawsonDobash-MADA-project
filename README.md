@@ -1,6 +1,6 @@
 # Overview
 
-A template file and folder structure for a data analysis project/paper done with R/Rmarkdown/Github. 
+Here is my MADA project. The information and background for this project is within the introduction section of the manuscript document. I have included the data sets I will possibly use within the raw data folder. I also added some code to the processing script on reading in the data ans showing what the data looks like. I included 3 data sets out of the 8 because one shows the same information as the other data sets not included just in a different region of the world. 
 
 # Pre-requisites
 
