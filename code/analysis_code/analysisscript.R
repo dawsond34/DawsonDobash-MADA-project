@@ -21,51 +21,108 @@ mydata <- readRDS(data_location)
 ######################################
 #Data exploration/description
 ######################################
-#I'm using basic R commands here.
-#Lots of good packages exist to do more.
-#For instance check out the tableone or skimr packages
+#The most notable of countries not in the data set are China and Philippines as they did not have any vaccine numbers 
+#displayed within the source. 
 
-#summarize data 
-mysummary = summary(mydata)
+#This is just to look at the distributions of each numeric variable
+summarytable = summary(mydata)
 
-#look at summary
-print(mysummary)
+#For this scatter plot, I plotted each countries population compare to their total cases of COVID-19.
+#You can see that there are three countries that either has more population or total cases than others
+fig1 = mydata %>% ggplot(aes(x=Population, y=`Total Cases`, label=Country)) + geom_point() + 
+  geom_text(aes(label=ifelse(`Total Cases`>20000000, as.character(Country),'')), hjust=.3,vjust=1) + 
+            ggtitle("Figure 1: Scatterplot of Total Cases by Population for each Country \n Labeling some outliers")
 
-#do the same, but with a bit of trickery to get things into the 
-#shape of a data frame (for easier saving/showing in manuscript)
-summary_df = data.frame(do.call(cbind, lapply(mydata, summary)))
+#This scatter plot is in response to looking at only countries that has less than 40 million people. This is to
+#show the distribution of the other countries.
+fig2 = mydata %>% filter(Population <= 40000000) %>% ggplot(aes(x=Population, y=`Total Cases`)) + geom_point() + 
+  ggtitle("Figure 2: Scatterplot of Total Cases by Population for each Country \n under the Population of 40 million")
+
+#I wanted to see the top 10 Countries with the most cases proportionally to their population. I included the 
+#continent that are on just to see if there was any connection. We can see that there is a good mixture of countries 
+#within this top ten list
+tab1 = mydata %>% mutate(totcase_percent = (`Total Cases`/Population)*100) %>% arrange(desc(totcase_percent)) %>% 
+  select(Country,location, totcase_percent) %>% head(., 10)
+
+#This is a scatterplot of showing total cases by total recovered. We can see just like the population scatterplot
+#that the same three countries have much larger numbers than all of the other ones. Just by the look of this
+#It looks to have a simple linear relationship. I wanted to see if there were any countries that could be doing the 
+#recovery/health care process.
+fig3 = mydata %>% ggplot(aes(y=`Total Recovered`, x=`Total Cases`, label = Country)) + geom_point() + 
+  geom_text(aes(label = ifelse(`Total Cases` > 20000000, as.character(Country),''))) + 
+  ggtitle("Figure 3: Scatterplot of Total Recovered by Total Cases \n with labels for Countries over 20 million")
+
+#Just like before, I subsetted the countries to only those who had less than 20 million cases to look at the bulk
+#of the countries and the distribution. We can see is it really a linear relationship for all countries and no countries
+#have a lot more recovered cases.
+fig4 = mydata %>% filter(`Total Cases` <= 20000000) %>% ggplot(aes(y=`Total Recovered`, x=`Total Cases`, label = Country)) + 
+  geom_point() + geom_text(aes(label=ifelse(`Total Cases` > 3000000, as.character(Country),''))) + 
+  ggtitle("Figure 4: Scatterplot of Total Recovered by Total Cases for only Countries under 20 million cases \n (labeling for total cases over 3 million)")
+
+#I then wanted to look at the recovery rate and which countries had the highest and lowest. Therefore, I used
+#the head and tail functions to give the top 5 and bottom 5 recovery rate countries. Included in this table is also 
+#the continent they are on, death rate, and total cases just to see if a lot of people were affected.
+tab2 = mydata %>% mutate(recov_rate = `Total Recovered`/`Total Cases`, death_rate = `Total Deaths`/`Total Cases`) %>%
+  select(Country, location, recov_rate, death_rate, `Total Cases`) %>% arrange(desc(recov_rate)) %>% 
+  {rbind(head(., 5), tail(., 5))}
+
+#I also want to look at the top 5 and bottom 5 death rate countries of COVID-19. We can see that two countries have over
+#10% death rate of the total number of cases documented. However, Vanuatu only had 4 total cases of this. Therefore
+#the population size does not really give a good representation. 
+tab3 = mydata %>% mutate(recov_rate = `Total Recovered`/`Total Cases`, death_rate = `Total Deaths`/`Total Cases`) %>%
+  select(Country, location, recov_rate, death_rate, `Total Cases`) %>% arrange(desc(death_rate)) %>% 
+  {rbind(head(., 5), tail(., 5))}
+
+#This is a histogram showing the distribution of those who are fully vaccinated. We can see that it is right skewed
+#Which is not a surprise but the majority of countries have less than 25% of people fully vaccinated.
+fig5 = mydata %>% ggplot(aes(x = `% of population fully vaccinated`)) + geom_histogram(binwidth = 10) + 
+  ggtitle("Figure 5: Histogram of Percent of People Fully Vaccinated \n (by Country)")
+  
+#This scatterplot is looking at the amount of health care funding a country has compared to the percent of people
+#vaccinated within each country. Since there were only 48 countries that provided their health care funds, this is 
+#only showing those countries. We can see that they is definitely some positive correlation between funds and people 
+#vaccinated with the United States as the one country that looks to have more funding but not as much people vaccinated.
+fig6 = mydata %>% ggplot(aes(x=Value, y=`% of population fully vaccinated`, label = Country)) + 
+  geom_point() + geom_text(aes(label=Country)) + 
+  ggtitle("Figure 6: Scatterplot of Percent of People Fully Vaccinated by Health Care Funds \n (by Country)") +
+  xlab("Health Care Funds")
 
 #save data frame table to file for later use in manuscript
 summarytable_file = here("results", "summarytable.rds")
-saveRDS(summary_df, file = summarytable_file)
+saveRDS(summarytable, file = summarytable_file)
 
+tab1_file = here("results", "table1.rds")
+saveRDS(tab1, file = tab1_file)
 
-#make a scatterplot of data
-#we also add a linear regression line to it
-p1 <- mydata %>% ggplot(aes(x=Height, y=Weight)) + geom_point() + geom_smooth(method='lm')
+tab2_file = here("results", "table2.rds")
+saveRDS(tab2, file = tab2_file)
 
-#look at figure
-plot(p1)
+tab3_file = here("results", "table3.rds")
+saveRDS(tab3, file = tab3_file)
+
 
 #save figure
-figure_file = here("results","resultfigure.png")
-ggsave(filename = figure_file, plot=p1) 
+fig1_file = here("results","figure1.png")
+ggsave(filename = fig1_file, plot=fig1) 
+
+fig2_file = here("results","figure2.png")
+ggsave(filename = fig2_file, plot=fig2) 
+
+fig3_file = here("results","figure3.png")
+ggsave(filename = fig3_file, plot=fig3) 
+
+fig4_file = here("results","figure4.png")
+ggsave(filename = fig4_file, plot=fig4) 
+
+fig5_file = here("results","figure5.png")
+ggsave(filename = fig5_file, plot=fig5) 
+
+fig6_file = here("results","figure6.png")
+ggsave(filename = fig6_file, plot=fig6) 
 
 ######################################
 #Data fitting/statistical analysis
 ######################################
 
-# fit linear model
-lmfit <- lm(Weight ~ Height, mydata)  
-
-# place results from fit into a data frame with the tidy function
-lmtable <- broom::tidy(lmfit)
-
-#look at fit results
-print(lmtable)
-
-# save fit results table  
-table_file = here("results", "resulttable.rds")
-saveRDS(lmtable, file = table_file)
 
   

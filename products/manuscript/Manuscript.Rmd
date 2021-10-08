@@ -48,27 +48,27 @@ Since this data is cumulative and does not break down the amount of cases per mo
 
 Some issues I can run into are: 
 1) Developed countries might have more cases as they are in contact with the world more as travelers commonly travel to certain countries. Therefore could show an inverse relationship to what I expect with more developed countries have more recoveries. 
-2) Unknown dates of when a country received vaccines.
+2) Unknown dates of when a country received vaccines and amount.
 
 # Methods and Results
 
 _In most research papers, results and methods are separate. You can combine them here if you find it easier. You are also welcome to structure things such that those are separate sections._
 
 
-## Data aquisition
-_As applicable, explain where and how you got the data. If you directly import the data from an online source, you can combine this section with the next._
-
 ## Data import and cleaning
-_Write code that reads in the file and cleans it so it's ready for analysis. Since this will be fairly long code for most datasets, it might be a good idea to have it in one or several R scripts. If that is the case, explain here briefly what kind of cleaning/processing you do, and provide more details and well documented code somewhere (e.g. as supplement in a paper). All materials, including files that contain code, should be commented well so everyone can follow along._
+For the data importing and cleaning section, I first had to import 8 different data sets into R from multiple sources specified in the Description of data and data source. After this importation, The first thing to do before combing the data set was to create indicator variables for each country. After this I wanted to make sure that each variable was the right class as some of the numeric variables were character variables. This will help in making sure that each variable was able to be used in the right way. 
+
+I then was able to combine each continent data set into one world data set to make the importing go easier. After combining the data sets, I need to only include the variable for each data set needed for analysis and make sure that all na values were removed from each data set as I only want full information observations. However this would delete some countries that were large in population such as China and Phillipines as they did not have vaccine information.
+
+The last problem I ran into was that the country names for all datasets were different. One included a three letter code for countries, then another one used different abbreviations/names for countries. I had to use the countrynames package to help change into names I wanted. Since I could not change all of the countries names to the way I wanted it, I had to unfortunately go into the raw data csv files to change them manually. After all of this was good to go, I used the merge function to combine all of the data sets the way I wanted to. 
+
+One disclosure I have for this is that one data set, health care funds, only had 48 countries when I cleaned the data. Therefore, there are a lot of na values for only those specific variables that came from the health care funds data set in the merged one. 
+
+To look at a more descriptive explanation of all of the steps I took in data cleaning and importing, go to the processing script where it has comments for every line of code. 
 
 
 ## Exploratory analysis
 
-_Use a combination of text/tables/figures to explore and describe your data. You should produce plots or tables or other summary quantities for the most interesting/important quantities in your data. Depending on the total number of variables in your dataset, explore all or some of the others. FIgures produced here might be histograms or density plots, correlation plots, etc. Tables might summarize your data._
-
-_Continue by creating plots or tables of the outcome(s) of interest and the predictor/exposure/input variables you are most interested in. If your dataset is small, you can do that for all variables. Plots produced here can be scatterplots, boxplots, violinplots, etc. Tables can be simple 2x2 tables or larger ones._
-
-_To get some further insight into your data, if reasonable you could compute simple statistics (e.g. t-tests, simple regression model with 1 predictor, etc.) to look for associations between your outcome(s) and each individual predictor variable. Though note that unless you pre-specified the outcome and main exposure, any "p<0.05 means statistical significance" interpretation is not valid._
 
 Table \@ref(tab:summarytable) shows a table summarizing the data.
 
@@ -78,24 +78,72 @@ resulttable=readRDS("../../results/summarytable.rds")
 knitr::kable(resulttable, caption = 'Data summary table.')
 ```
 
+Table \@ref(tab:table1) shows a table of the top 10 countries with the highest percentage of cases by population. We can see that there are a variety of locations and that Montenegro and Czech Republic are the highest 2 countries with the most cases by population.
 
-Figure \@ref(fig:resultfigure) shows a scatterplot figure produced by one of the R scripts.
 
-```{r resultfigure,  fig.cap='Analysis figure.', echo=FALSE}
-knitr::include_graphics("../../results/resultfigure.png")
+```{r table1,  echo=FALSE}
+tab1=readRDS("../../results/table1.rds")
+knitr::kable(tab1)
+```
+
+Table \@ref(tab:table2) shows a table of the top 5 and bottom 5 recovery rates also sharing the total cases numbers.It looks that Asia dominates the top 5 countries for recovery rate. For the bottom 5, there is a mixture of locations. We can also see that the recovery rate and death rate for the bottom 5 teams do not add up to 100 or close to it. This means there are a lot of active cases. 
+
+
+```{r table2,  echo=FALSE}
+tab2=readRDS("../../results/table2.rds")
+knitr::kable(tab2)
+```
+
+Table \@ref(tab:table3) shows a table  of the top 5 and bottom 5 countries for death rate. We can see that Vanuatu only has a total of 4 cases but Yemen also has a significantly large rate then the next top country, Mexico. We can also see that Asia dominates the lowest death rates. 
+
+
+```{r table3,  echo=FALSE}
+tab3=readRDS("../../results/table3.rds")
+knitr::kable(tab3)
+```
+
+
+
+Figure \@ref(fig:figure1) shows a scatterplot figure  of total cases by population. United States, India, and Brazil are some outliers of the countries.
+
+```{r figure1,  fig.cap='Analysis figure.', echo=FALSE}
+knitr::include_graphics("../../results/figure1.png")
+```
+
+Figure \@ref(fig:figure2) shows a scatterplot figure of total cases by population filtered down to countries with less than 40 mllion population. We can see that the total cases are spread out. 
+
+```{r figure2,  fig.cap='Analysis figure.', echo=FALSE}
+knitr::include_graphics("../../results/figure2.png")
+```
+
+Figure \@ref(fig:figure3) shows a scatterplot figure of total recovered patients by total cases. We can see just like in figure 1 that the United States, India, and Brazil have a overwhelmingly more cases than other countries. Therefore in figure 4, we will explore the majority of the countries.
+
+```{r figure3,  fig.cap='Analysis figure.', echo=FALSE}
+knitr::include_graphics("../../results/figure3.png")
+```
+
+Figure \@ref(fig:figure4) shows a scatterplot figure of the same plot as before just filtering countries with less than 20 million cases. We can see a linear relationship between the recovered to total cases. It looks like a slope of 1. 
+
+```{r figure4,  fig.cap='Analysis figure.', echo=FALSE}
+knitr::include_graphics("../../results/figure4.png")
+```
+
+Figure \@ref(fig:figure5) shows a histogram figure of the percent of fully vaccinated people. We can see that the histogram is right skewed where most of the countries have less than 25% of the population fully vaccinated. 
+
+```{r figure5,  fig.cap='Analysis figure.', echo=FALSE}
+knitr::include_graphics("../../results/figure5.png")
+```
+
+Figure \@ref(fig:figure6) shows a scatterplot figure of percent of people fully vaccinated by health care funding. We can see that it is a linear relationship with a positive correlation. Wecan also see that the United States is out of the norm where they spend a lot more on health care funding compared to the percent of people fully vaccinated. 
+
+```{r figure6,  fig.cap='Analysis figure.', echo=FALSE}
+knitr::include_graphics("../../results/figure6.png")
 ```
 
 
 ## Full analysis
 
 _Use one or several suitable statistical/machine learning methods to analyze your data and to produce meaningful figures, tables, etc. This might again be code that is best placed in one or several separate R scripts that need to be well documented. You want the code to produce figures and data ready for display as tables, and save those. Then you load them here._
-
-Example table \@ref(tab:resulttable) shows a table summarizing a linear model fit.
-
-```{r resulttable,  echo=FALSE}
-resulttable=readRDS("../../results/resulttable.rds")
-knitr::kable(resulttable, caption = 'Linear model fit table.')
-```
 
 
 # Discussion
@@ -110,10 +158,6 @@ _Discuss what you perceive as strengths and limitations of your analysis._
 _What are the main take-home messages?_
 
 _Include citations in your Rmd file using bibtex, the list of references will automatically be placed at the end_
-
-This paper [@Leek2015a] discusses types of analyses. 
-
-Note that this cited reference will show up at the end of the document, the reference formatting is determined by the CSL file specified in the YAML header. Many more style files for almost any journal [are available](https://www.zotero.org/styles). You also specify the location of your bibtex reference file in the YAML. You can call your reference file anything you like, I just used the generic word `references.bib` but giving it a more descriptive name is probably better.
 
 
 # References
