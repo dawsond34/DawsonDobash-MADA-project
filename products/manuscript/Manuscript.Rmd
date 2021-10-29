@@ -195,33 +195,41 @@ Looking at all of these tables, we can see that the R^2 values are very low. The
 
 ### Percent of cases for each country
 
-We can see with looking at figure 8 that the percentage of cases are extremely right skewed. For now, I will proceed with doing some simple linear regression. Below shows model statistics for each model.
+We can see with looking at figure 8 that the percentage of cases are extremely right skewed. For now, I will proceed with doing some simple linear regression. Below shows model statistics for each model and a visual showing the relationship between the two variables.
 
-Table 9 is showing statistics for the predictor vaccine percentage.
-```{r table9,  echo=FALSE}
+Figure 10 is showing statistics for the predictor vaccine percentage.
+```{r vaccine pct,  echo=FALSE}
+knitr::include_graphics("../../results/figure10.png")
+
 tab9=readRDS("../../results/tablevacc2.rds")
 knitr::kable(tab9)
 ```
 
-Table 10 is showing statistics for the predictor health care funds.
-```{r table10,  echo=FALSE}
+Figure 11 is showing statistics for the predictor health care funds.
+```{r health care,  echo=FALSE}
+knitr::include_graphics("../../results/figure11.png")
+
 tab10=readRDS("../../results/tablehc2.rds")
 knitr::kable(tab10)
 ```
 
-Table 11 is showing statistics for the predictor number of tests per person.
-```{r table11,  echo=FALSE}
+Figure 12 is showing statistics for the predictor number of tests per person.
+```{r Tests,  echo=FALSE}
+knitr::include_graphics("../../results/figure12.png")
+
 tab11=readRDS("../../results/tabletests2.rds")
 knitr::kable(tab11)
 ```
 
-Table 12 is showing statistics for the predictor location which specifies the continent for each country.
-```{r table12,  echo=FALSE}
+Figure 13 is showing statistics for the predictor location which specifies the continent for each country.
+```{r Location,  echo=FALSE}
+knitr::include_graphics("../../results/figure13.png")
+
 tab12=readRDS("../../results/tableloc2.rds")
 knitr::kable(tab12)
 ```
 
-From these tables, we can see that the R^2's for these models are still relatively low but a simple linear regression of using percent vaccination or the location of each country have R^2's of around 0.35 which is an improvement from the linear regression models from using logit transformation of difference in proportions as the outcome. 
+From these visuals, we can see that the R^2's for these models are still relatively low but a simple linear regression of using percent vaccination or the location of each country have R^2's of around 0.35 which is an improvement from the linear regression models from using logit transformation of difference in proportions as the outcome. 
 
 # Discussion
 

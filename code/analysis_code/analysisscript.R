@@ -282,15 +282,37 @@ saveRDS(loc_stats2, file = tabloc2_file)
 
 #Visualization of the simple linear regression models
 #Simple scatterplots of these simple linear regressions
-vacc_scatterplot <- mydata %>% ggplot(aes(x=`% of population vaccinated`, y = pct_cases)) + geom_point()
+vacc_scatterplot <- mydata %>% ggplot(aes(x=`% of population vaccinated`, y = pct_cases)) + geom_point() + 
+  ggtitle("Figure 10: Scatterplot of Percent of People Fully Vaccinated and Percentage of Cases \n (by Country)") 
 vacc_scatterplot
 
-hc_fund_scatterplot <- mydata %>% ggplot(aes(x=Value, y = pct_cases)) + geom_point()
+hc_fund_scatterplot <- mydata %>% ggplot(aes(x=Value, y = pct_cases)) + geom_point() + 
+  ggtitle("Figure 11: Scatterplot of Healthcare funds and Percentage of Cases \n (by Country)") +
+  xlab("Health Care Funds")
 hc_fund_scatterplot
 
 tests_scatterplot <- mydata %>% ggplot(aes(x=test_per_person, y = pct_cases)) + geom_point()
 tests_scatterplot
 
+tests_scatterplot2 <- mydata %>% filter(test_per_person < 2) %>% ggplot(aes(x=test_per_person, y = pct_cases)) + geom_point()  + 
+  ggtitle("Figure 12: Scatterplot of COVID-19 tests per person and Percentage of Cases \n (by Country)") 
+tests_scatterplot2
+
 #Simple boxplot of difference in proportions by continent
-loc_boxplot <- mydata %>% ggplot(aes(x=location, y = pct_cases)) + geom_boxplot()
+loc_boxplot <- mydata %>% ggplot(aes(x=location, y = pct_cases)) + geom_boxplot()  + 
+  ggtitle("Figure 13: Histogram of the percent of cases by location \n (for each Country)") +
+  xlab("Continent")
 loc_boxplot
+
+#Save figures to result folder
+fig10_file = here("results","figure10.png")
+ggsave(filename = fig10_file, plot=vacc_scatterplot)
+
+fig11_file = here("results","figure11.png")
+ggsave(filename = fig11_file, plot=hc_fund_scatterplot)
+
+fig12_file = here("results","figure12.png")
+ggsave(filename = fig12_file, plot=tests_scatterplot2)
+
+fig13_file = here("results","figure13.png")
+ggsave(filename = fig13_file, plot=loc_boxplot)
