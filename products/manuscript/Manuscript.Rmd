@@ -191,7 +191,7 @@ tab8=readRDS("../../results/tableloc1.rds")
 knitr::kable(tab8)
 ```
 
-Looking at all of these tables, we can see that the R^2 values are very low. Therefore none of these predictors shows any association with the logit transformation outcome. Since not even one predictor is good for this outcome, I am going to spot my analysis with this outcome and go to my second question which uses the percent of cases within each country.
+Looking at all of these tables, we can see that the R^2 values are very low. Therefore none of these predictors shows any association with the logit transformation outcome. Since not even one predictor is good for this outcome, I am going to stop my analysis with this outcome and go to my second question which uses the percent of cases within each country. However, the p-values for all models are significant which does not makes sense when the r-squared values are really low. 
 
 ### Percent of cases for each country
 
@@ -229,7 +229,7 @@ tab12=readRDS("../../results/tableloc2.rds")
 knitr::kable(tab12)
 ```
 
-From these visuals, we can see that the R^2's for these models are still relatively low but a simple linear regression of using percent vaccination or the location of each country have R^2's of around 0.35 which is an improvement from the linear regression models from using logit transformation of difference in proportions as the outcome. 
+From these visuals, we can see that the R^2's for these models are still relatively low but a simple linear regression of using percent vaccination or the location of each country have R^2's of around 0.35 which is an improvement from the linear regression models from using logit transformation of difference in proportions as the outcome. We can also see that for Figure 11 the scatterplot does not show that much association compared to the Figures 10, 12, and 13. We can see in Figure 13, the boxplots have some significant differences such as Africa compared to the other continents like Europe, South America, and North America. 
 
 # Discussion
 

@@ -316,3 +316,16 @@ ggsave(filename = fig12_file, plot=tests_scatterplot2)
 
 fig13_file = here("results","figure13.png")
 ggsave(filename = fig13_file, plot=loc_boxplot)
+
+
+
+
+
+
+#Multivariable regression
+mult_reg_rec1 = recipe(pct_cases ~ `% of population vaccinated` + location, data=mydata)
+
+mult_reg_wrkflow1 <- workflow() %>% add_model(lm_mod) %>% add_recipe(mult_reg_rec1)
+mult_reg_fit1 <- mult_reg_wrkflow1 %>% fit(data = mydata)
+mult_reg_fit1 %>% extract_fit_parsnip() %>% tidy()
+mult_reg_stats = glance(mult_reg_fit1)
