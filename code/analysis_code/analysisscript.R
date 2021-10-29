@@ -96,6 +96,12 @@ fig7 = mydata %>% ggplot(aes(x = prop_diff_recov_vs_death )) + geom_histogram(bi
   ggtitle("Figure 7: Histogram of Difference in proportions \n of those who recovered versus those who died \n (by Country)")
 fig7
 
+#Looking at the distribution using a histogram
+fig8 = mydata %>% ggplot(aes(x = pct_cases)) + geom_histogram(binwidth = 2) + 
+  ggtitle("Figure 8: Histogram of Percentage of cases\n (by Country)")
+fig8
+
+
 #save data frame table to file for later use in manuscript
 summarytable_file = here("results", "summarytable.rds")
 saveRDS(summarytable, file = summarytable_file)
@@ -132,6 +138,10 @@ ggsave(filename = fig6_file, plot=fig6)
 fig7_file = here("results","figure7.png")
 ggsave(filename = fig7_file, plot=fig7)
 
+fig8_file = here("results","figure8.png")
+ggsave(filename = fig8_file, plot=fig8)
+
+
 ######################################
 #Data fitting/statistical analysis
 ######################################
@@ -160,13 +170,13 @@ mydata$logit_prop_diff = logit(mydata$prop_diff_recov_vs_death)
 
 #This is a histogram of the logit difference in proportions of those who are recovered and who died with each denominator as
 #number of cases.
-fig8 = mydata %>% ggplot(aes(x = logit_prop_diff )) + geom_histogram(binwidth = 0.5) + 
-  ggtitle("Figure 8: Histogram of logit transformation of difference in proportions \n of those who recovered versus those who died \n (by Country)")
-fig8
+fig9 = mydata %>% ggplot(aes(x = logit_prop_diff )) + geom_histogram(binwidth = 0.5) + 
+  ggtitle("Figure 9: Histogram of logit transformation of difference in proportions \n of those who recovered versus those who died \n (by Country)")
+fig9
 
 #Saving figure * to a location for future references
-fig8_file = here("results","figure8.png")
-ggsave(filename = fig8_file, plot=fig8)
+fig9_file = here("results","figure9.png")
+ggsave(filename = fig9_file, plot=fig9)
 
 
 #Creating a specific model type via tidymodels
@@ -227,8 +237,60 @@ saveRDS(loc_stats, file = tabloc1_file)
 
 ######### Analysis Part 2- percentage of cases within a country ###############
 
-fig8 = mydata %>% ggplot(aes(x = logit_prop_diff )) + geom_histogram(binwidth = 0.5) + 
-  ggtitle("Figure 8: Histogram of logit transformation of difference in proportions \n of those who recovered versus those who died \n (by Country)")
-fig8
 
+#Creating a recipe for each simple linear regression
+vacc_rec2 = recipe(pct_cases~ `% of population vaccinated`, data = mydata)
+healthcare_fund_rec2 = recipe(pct_cases~Value, data = mydata)
+tests_rec2 = recipe(pct_cases~test_per_person, data = mydata)
+loc_rec2 = recipe(pct_cases~location, data = mydata)
 
+#Creating workflows based on the different recipes above
+vacc_wrkflow2 <- workflow() %>% add_model(lm_mod) %>% add_recipe(vacc_rec2)
+healthcare_fund_wrkflow2 <- workflow() %>% add_model(lm_mod) %>% add_recipe(healthcare_fund_rec2)
+tests_wrkflow2 <- workflow() %>% add_model(lm_mod) %>% add_recipe(tests_rec2)
+loc_wrkflow2 <- workflow() %>% add_model(lm_mod) %>% add_recipe(loc_rec2)
+
+#Creating fit objects
+vacc_fit2 <- vacc_wrkflow2 %>% fit(data = mydata)
+hc_fund_fit2 <- healthcare_fund_wrkflow2 %>% fit(data = mydata)
+tests_fit2 <- tests_wrkflow2 %>% fit(data = mydata)
+loc_fit2 <- loc_wrkflow2 %>% fit(data = mydata)
+
+#Looking at the details of each fitted model
+vacc_fit2 %>% extract_fit_parsnip() %>% tidy()
+hc_fund_fit2 %>% extract_fit_parsnip() %>% tidy()
+tests_fit2 %>% extract_fit_parsnip() %>% tidy()
+loc_fit2 %>% extract_fit_parsnip() %>% tidy()
+
+vacc_stats2 = glance(vacc_fit2)
+hc_fund_stats2 = glance(hc_fund_fit2)
+tests_stats2 = glance(tests_fit2)
+loc_stats2 = glance(loc_fit2)
+
+#Saving tables for later use
+tabhc2_file = here("results", "tablehc2.rds")
+saveRDS(hc_fund_stats2, file = tabhc2_file)
+
+tabvacc2_file = here("results", "tablevacc2.rds")
+saveRDS(vacc_stats2, file = tabvacc2_file)
+
+tabtests2_file = here("results", "tabletests2.rds")
+saveRDS(tests_stats2, file = tabtests2_file)
+
+tabloc2_file = here("results", "tableloc2.rds")
+saveRDS(loc_stats2, file = tabloc2_file)
+
+#Visualization of the simple linear regression models
+#Simple scatterplots of these simple linear regressions
+vacc_scatterplot <- mydata %>% ggplot(aes(x=`% of population vaccinated`, y = pct_cases)) + geom_point()
+vacc_scatterplot
+
+hc_fund_scatterplot <- mydata %>% ggplot(aes(x=Value, y = pct_cases)) + geom_point()
+hc_fund_scatterplot
+
+tests_scatterplot <- mydata %>% ggplot(aes(x=test_per_person, y = pct_cases)) + geom_point()
+tests_scatterplot
+
+#Simple boxplot of difference in proportions by continent
+loc_boxplot <- mydata %>% ggplot(aes(x=location, y = pct_cases)) + geom_boxplot()
+loc_boxplot

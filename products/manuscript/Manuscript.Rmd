@@ -141,20 +141,26 @@ Figure 6 shows a scatterplot figure of percent of people fully vaccinated by hea
 knitr::include_graphics("../../results/figure6.png")
 ```
 
-Figure 7 shows a histogram figure that describes the difference in proportions between those who recovered versus the proportion of those who died. From the histogram we can see that this difference is right skewed as most countries have a much hagher recovery rate with only a some having more of a lower difference meaning lower recovery rates.
+Figure 7 shows a histogram figure that describes the difference in proportions between those who recovered versus the proportion of those who died. From the histogram we can see that this difference is left skewed as most countries have a much hagher recovery rate with only a some having more of a lower difference meaning lower recovery rates.
 
 ```{r figure7,  fig.cap='Analysis figure.', echo=FALSE}
 knitr::include_graphics("../../results/figure7.png")
+```
+
+Figure 8 shows a histogram figure of the percentage of cases per population. We can see that this data is highly skewed to the right.
+
+```{r figure8,  fig.cap='Analysis figure.', echo=FALSE}
+knitr::include_graphics("../../results/figure8.png")
 ```
 
 ## Full analysis
 
 ### Difference in proportions of recovery and deaths
 
-For my first question, we are looking at the difference in proportions of those who have recovered versus those how died. We can see in figure 7 that this data is fairly skewed. Therefore, I will do a logit transformation of the outcome to make it more normal as shown in figure 8. 
+For my first question, we are looking at the difference in proportions of those who have recovered versus those how died. We can see in figure 7 that this data is fairly skewed. Therefore, I will do a logit transformation of the outcome to make it more normal as shown in figure 9. 
 
-```{r figure8,  fig.cap='Analysis figure.', echo=FALSE}
-knitr::include_graphics("../../results/figure8.png")
+```{r figure9,  fig.cap='Analysis figure.', echo=FALSE}
+knitr::include_graphics("../../results/figure9.png")
 ```
 
 Before I decided on the logit transformation, I first decided to try this difference in proportions outcome I made within a binomial model and then a quasibinomial using the values of total cases as my weight to see how the deviance and dispersion values are. After running two simple models, the results were showing very high values for these statistics. Therefore this is how I decided on using the logit transformation. 
@@ -189,7 +195,33 @@ Looking at all of these tables, we can see that the R^2 values are very low. The
 
 ### Percent of cases for each country
 
+We can see with looking at figure 8 that the percentage of cases are extremely right skewed. For now, I will proceed with doing some simple linear regression. Below shows model statistics for each model.
 
+Table 9 is showing statistics for the predictor vaccine percentage.
+```{r table9,  echo=FALSE}
+tab9=readRDS("../../results/tablevacc2.rds")
+knitr::kable(tab9)
+```
+
+Table 10 is showing statistics for the predictor health care funds.
+```{r table10,  echo=FALSE}
+tab10=readRDS("../../results/tablehc2.rds")
+knitr::kable(tab10)
+```
+
+Table 11 is showing statistics for the predictor number of tests per person.
+```{r table11,  echo=FALSE}
+tab11=readRDS("../../results/tabletests2.rds")
+knitr::kable(tab11)
+```
+
+Table 12 is showing statistics for the predictor location which specifies the continent for each country.
+```{r table12,  echo=FALSE}
+tab12=readRDS("../../results/tableloc2.rds")
+knitr::kable(tab12)
+```
+
+From these tables, we can see that the R^2's for these models are still relatively low but a simple linear regression of using percent vaccination or the location of each country have R^2's of around 0.35 which is an improvement from the linear regression models from using logit transformation of difference in proportions as the outcome. 
 
 # Discussion
 
