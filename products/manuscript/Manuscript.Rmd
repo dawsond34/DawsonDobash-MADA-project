@@ -33,7 +33,6 @@ I plan on combining the data sets into one with the variable combining them all 
 
 I included 3 data sets out of the 8 within the processingscript for now because one shows the same information as the other data sets not included just in a different region of the world. This is just to show the data I will be using.  
 
-I plan on trying to find more information/data sets about some demographics data for the countries like type of government and an indicator for developed vs. developing countries.
 
 Links to the locations I received the data are below:
 
@@ -44,7 +43,9 @@ https://www.kaggle.com/iamsouravbanerjee/covid19-dataset-world-and-continent-wis
 https://www.kaggle.com/anandhuh/latest-worldwide-vaccine-data
 
 ## Questions/Hypotheses to be addressed
-Since this data is cumulative and does not break down the amount of cases per month per country, I want to compare the recovery proportion to the death proportion and if this difference is based on variables such as the number of vaccines pushed out to society, the amount of funding the health care system has, the amount of tests taken. I also plan on adding more information as state in the description of data section. This will hopefully show if the amount of health care support really helps patients recover.
+1) Since this data is cumulative and does not break down the amount of cases per month per country, I want to compare the recovery proportion to the death proportion and if this difference is based on variables such as the number of vaccines pushed out to society, the amount of funding the health care system has, the amount of tests taken. This will hopefully show if the amount of health care support really helps patients recover.
+
+2) I will also look at how the percent of COVID-19 cases for each country is affected by multiple predictors such as the ones addressed in the above paragraph. 
 
 Some issues I can run into are: 
 1) Developed countries might have more cases as they are in contact with the world more as travelers commonly travel to certain countries. Therefore could show an inverse relationship to what I expect with more developed countries have more recoveries. 
@@ -70,7 +71,7 @@ To look at a more descriptive explanation of all of the steps I took in data cle
 ## Exploratory analysis
 
 
-Table \@ref(tab:summarytable) shows a table summarizing the data.
+Table 1 shows a table summarizing the data.
 
 
 ```{r summarytable,  echo=FALSE}
@@ -78,7 +79,7 @@ resulttable=readRDS("../../results/summarytable.rds")
 knitr::kable(resulttable, caption = 'Data summary table.')
 ```
 
-Table \@ref(tab:table1) shows a table of the top 10 countries with the highest percentage of cases by population. We can see that there are a variety of locations and that Montenegro and Czech Republic are the highest 2 countries with the most cases by population.
+Table 2 shows a table of the top 10 countries with the highest percentage of cases by population. We can see that there are a variety of locations and that Montenegro and Czech Republic are the highest 2 countries with the most cases by population.
 
 
 ```{r table1,  echo=FALSE}
@@ -86,7 +87,7 @@ tab1=readRDS("../../results/table1.rds")
 knitr::kable(tab1)
 ```
 
-Table \@ref(tab:table2) shows a table of the top 5 and bottom 5 recovery rates also sharing the total cases numbers.It looks that Asia dominates the top 5 countries for recovery rate. For the bottom 5, there is a mixture of locations. We can also see that the recovery rate and death rate for the bottom 5 teams do not add up to 100 or close to it. This means there are a lot of active cases. 
+Table 3 shows a table of the top 5 and bottom 5 recovery rates also sharing the total cases numbers.It looks that Asia dominates the top 5 countries for recovery rate. For the bottom 5, there is a mixture of locations. We can also see that the recovery rate and death rate for the bottom 5 teams do not add up to 100 or close to it. This means there are a lot of active cases. 
 
 
 ```{r table2,  echo=FALSE}
@@ -94,7 +95,7 @@ tab2=readRDS("../../results/table2.rds")
 knitr::kable(tab2)
 ```
 
-Table \@ref(tab:table3) shows a table  of the top 5 and bottom 5 countries for death rate. We can see that Vanuatu only has a total of 4 cases but Yemen also has a significantly large rate then the next top country, Mexico. We can also see that Asia dominates the lowest death rates. 
+Table 4 shows a table  of the top 5 and bottom 5 countries for death rate. We can see that Vanuatu only has a total of 4 cases but Yemen also has a significantly large rate then the next top country, Mexico. We can also see that Asia dominates the lowest death rates. 
 
 
 ```{r table3,  echo=FALSE}
@@ -104,46 +105,90 @@ knitr::kable(tab3)
 
 
 
-Figure \@ref(fig:figure1) shows a scatterplot figure  of total cases by population. United States, India, and Brazil are some outliers of the countries.
+Figure 1 shows a scatterplot figure  of total cases by population. United States, India, and Brazil are some outliers of the countries.
 
 ```{r figure1,  fig.cap='Analysis figure.', echo=FALSE}
 knitr::include_graphics("../../results/figure1.png")
 ```
 
-Figure \@ref(fig:figure2) shows a scatterplot figure of total cases by population filtered down to countries with less than 40 mllion population. We can see that the total cases are spread out. 
+Figure 2 shows a scatterplot figure of total cases by population filtered down to countries with less than 40 million population. We can see that the total cases are spread out. 
 
 ```{r figure2,  fig.cap='Analysis figure.', echo=FALSE}
 knitr::include_graphics("../../results/figure2.png")
 ```
 
-Figure \@ref(fig:figure3) shows a scatterplot figure of total recovered patients by total cases. We can see just like in figure 1 that the United States, India, and Brazil have a overwhelmingly more cases than other countries. Therefore in figure 4, we will explore the majority of the countries.
+Figure 3 shows a scatterplot figure of total recovered patients by total cases. We can see just like in figure 1 that the United States, India, and Brazil have a overwhelmingly more cases than other countries. Therefore in figure 4, we will explore the majority of the countries.
 
 ```{r figure3,  fig.cap='Analysis figure.', echo=FALSE}
 knitr::include_graphics("../../results/figure3.png")
 ```
 
-Figure \@ref(fig:figure4) shows a scatterplot figure of the same plot as before just filtering countries with less than 20 million cases. We can see a linear relationship between the recovered to total cases. It looks like a slope of 1. 
+Figure 4 shows a scatterplot figure of the same plot as before just filtering countries with less than 20 million cases. We can see a linear relationship between the recovered to total cases. It looks like a slope of 1. 
 
 ```{r figure4,  fig.cap='Analysis figure.', echo=FALSE}
 knitr::include_graphics("../../results/figure4.png")
 ```
 
-Figure \@ref(fig:figure5) shows a histogram figure of the percent of fully vaccinated people. We can see that the histogram is right skewed where most of the countries have less than 25% of the population fully vaccinated. 
+Figure 5 shows a histogram figure of the percent of fully vaccinated people. We can see that the histogram is right skewed where most of the countries have less than 25% of the population fully vaccinated. 
 
 ```{r figure5,  fig.cap='Analysis figure.', echo=FALSE}
 knitr::include_graphics("../../results/figure5.png")
 ```
 
-Figure \@ref(fig:figure6) shows a scatterplot figure of percent of people fully vaccinated by health care funding. We can see that it is a linear relationship with a positive correlation. Wecan also see that the United States is out of the norm where they spend a lot more on health care funding compared to the percent of people fully vaccinated. 
+Figure 6 shows a scatterplot figure of percent of people fully vaccinated by health care funding. We can see that it is a linear relationship with a positive correlation. We can also see that the United States is out of the norm where they spend a lot more on health care funding compared to the percent of people fully vaccinated. 
 
 ```{r figure6,  fig.cap='Analysis figure.', echo=FALSE}
 knitr::include_graphics("../../results/figure6.png")
 ```
 
+Figure 7 shows a histogram figure that describes the difference in proportions between those who recovered versus the proportion of those who died. From the histogram we can see that this difference is right skewed as most countries have a much hagher recovery rate with only a some having more of a lower difference meaning lower recovery rates.
+
+```{r figure7,  fig.cap='Analysis figure.', echo=FALSE}
+knitr::include_graphics("../../results/figure7.png")
+```
 
 ## Full analysis
 
-_Use one or several suitable statistical/machine learning methods to analyze your data and to produce meaningful figures, tables, etc. This might again be code that is best placed in one or several separate R scripts that need to be well documented. You want the code to produce figures and data ready for display as tables, and save those. Then you load them here._
+### Difference in proportions of recovery and deaths
+
+For my first question, we are looking at the difference in proportions of those who have recovered versus those how died. We can see in figure 7 that this data is fairly skewed. Therefore, I will do a logit transformation of the outcome to make it more normal as shown in figure 8. 
+
+```{r figure8,  fig.cap='Analysis figure.', echo=FALSE}
+knitr::include_graphics("../../results/figure8.png")
+```
+
+Before I decided on the logit transformation, I first decided to try this difference in proportions outcome I made within a binomial model and then a quasibinomial using the values of total cases as my weight to see how the deviance and dispersion values are. After running two simple models, the results were showing very high values for these statistics. Therefore this is how I decided on using the logit transformation. 
+
+Using the logit transformation, I ran 4 simple linear regression models. Below I provide the statistics of each of the models within Tables 5-8.
+
+Table 5 is showing statistics for the predictor vaccine percentage.
+```{r table5,  echo=FALSE}
+tab5=readRDS("../../results/tablevacc1.rds")
+knitr::kable(tab5)
+```
+
+Table 6 is showing statistics for the predictor health care funds.
+```{r table6,  echo=FALSE}
+tab6=readRDS("../../results/tablehc1.rds")
+knitr::kable(tab6)
+```
+
+Table 7 is showing statistics for the predictor number of tests per person.
+```{r table7,  echo=FALSE}
+tab7=readRDS("../../results/tabletests1.rds")
+knitr::kable(tab7)
+```
+
+Table 8 is showing statistics for the predictor location which specifies the continent for each country.
+```{r table8,  echo=FALSE}
+tab8=readRDS("../../results/tableloc1.rds")
+knitr::kable(tab8)
+```
+
+Looking at all of these tables, we can see that the R^2 values are very low. Therefore none of these predictors shows any association with the logit transformation outcome. Since not even one predictor is good for this outcome, I am going to spot my analysis with this outcome and go to my second question which uses the percent of cases within each country.
+
+### Percent of cases for each country
+
 
 
 # Discussion

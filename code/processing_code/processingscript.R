@@ -110,8 +110,16 @@ merged_data = merge(clean_world, clean_vaccine, by="Country")
 #Since this data set is only 48 countries, it want to merge it into the combined data set but also including all 
 #observations from the combined data set. I am also removing the variable LOCATION as it is a redundant variable now
 
-processeddata = merge(merged_data, clean_funds2, by="Country", all.x = T)
-processeddata = select(processeddata, -LOCATION)
+merged_data2 = merge(merged_data, clean_funds2, by="Country", all.x = T)
+merged_data2 = select(merged_data2, -LOCATION)
+
+#Need to create some more variables such as proportions
+processeddata <- merged_data2 %>% mutate(prop_death = `Total Deaths`/`Total Cases`,
+                                         prop_recov = `Total Recovered`/`Total Cases`,
+                                         pct_cases = (`Total Cases`/Population)*100,
+                                         test_per_person = `Total Tests`/Population,
+                                         prop_diff_recov_vs_death = prop_recov - prop_death,
+                                         location = as.factor(location)) %>% filter(`Total Cases` >= 1000)
 
 #Looking at the complete data set
 

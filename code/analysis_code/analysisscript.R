@@ -9,6 +9,9 @@ library(ggplot2) #for plotting
 library(broom) #for cleaning up output from lm()
 library(here) #for data loading/saving
 library(tidyverse)
+library(AER)
+library(tidymodels)
+
 
 
 #path to data
@@ -87,6 +90,12 @@ fig6 = mydata %>% ggplot(aes(x=Value, y=`% of population fully vaccinated`, labe
   ggtitle("Figure 6: Scatterplot of Percent of People Fully Vaccinated by Health Care Funds \n (by Country)") +
   xlab("Health Care Funds")
 
+#This is a histogram of the difference in proportions of those who are recovered and who died with each denominator as
+#number of cases.
+fig7 = mydata %>% ggplot(aes(x = prop_diff_recov_vs_death )) + geom_histogram(binwidth = 0.05) + 
+  ggtitle("Figure 7: Histogram of Difference in proportions \n of those who recovered versus those who died \n (by Country)")
+fig7
+
 #save data frame table to file for later use in manuscript
 summarytable_file = here("results", "summarytable.rds")
 saveRDS(summarytable, file = summarytable_file)
@@ -101,7 +110,7 @@ tab3_file = here("results", "table3.rds")
 saveRDS(tab3, file = tab3_file)
 
 
-#save figure
+#save figures
 fig1_file = here("results","figure1.png")
 ggsave(filename = fig1_file, plot=fig1) 
 
@@ -120,9 +129,106 @@ ggsave(filename = fig5_file, plot=fig5)
 fig6_file = here("results","figure6.png")
 ggsave(filename = fig6_file, plot=fig6) 
 
+fig7_file = here("results","figure7.png")
+ggsave(filename = fig7_file, plot=fig7)
+
 ######################################
 #Data fitting/statistical analysis
 ######################################
 
+#Models 1 and 11 are looking at making models using binomial and quasibinomial as their family types. Included were summary tables
+#for each that show model information
+model1 = glm(prop_diff_recov_vs_death ~ prop_vacc, weights = `Total Cases`, data = mydata, family = "binomial")
+summary(model1)
 
-  
+model11 = glm(prop_diff_recov_vs_death ~ prop_vacc, weights = `Total Cases`, data = mydata, family = "quasibinomial")
+summary(model11)
+
+
+
+
+
+
+#Below starts the look at using a logit transformation of the outcome since the data was very skewed and the usage of binomial
+#quasibinomial produced high deviances and dispersion values.
+
+#Looking at the distribution of the proportion difference between proportion of recovered vs died
+summary(mydata$prop_diff_recov_vs_death)
+
+#Transforming my outcome to a logit value
+mydata$logit_prop_diff = logit(mydata$prop_diff_recov_vs_death)
+
+#This is a histogram of the logit difference in proportions of those who are recovered and who died with each denominator as
+#number of cases.
+fig8 = mydata %>% ggplot(aes(x = logit_prop_diff )) + geom_histogram(binwidth = 0.5) + 
+  ggtitle("Figure 8: Histogram of logit transformation of difference in proportions \n of those who recovered versus those who died \n (by Country)")
+fig8
+
+#Saving figure * to a location for future references
+fig8_file = here("results","figure8.png")
+ggsave(filename = fig8_file, plot=fig8)
+
+
+#Creating a specific model type via tidymodels
+lm_mod <- linear_reg() %>% set_engine("lm")
+
+#Creating recipes
+vacc_rec = recipe(logit_prop_diff~ `% of population vaccinated`, data = mydata)
+healthcare_fund_rec = recipe(logit_prop_diff~Value, data = mydata)
+tests_rec = recipe(logit_prop_diff~test_per_person, data = mydata)
+loc_rec = recipe(logit_prop_diff~location, data = mydata)
+
+#Creating workflows based on the different recipes above
+vacc_wrkflow <- workflow() %>% add_model(lm_mod) %>% add_recipe(vacc_rec)
+healthcare_fund_wrkflow <- workflow() %>% add_model(lm_mod) %>% add_recipe(healthcare_fund_rec)
+tests_wrkflow <- workflow() %>% add_model(lm_mod) %>% add_recipe(tests_rec)
+loc_wrkflow <- workflow() %>% add_model(lm_mod) %>% add_recipe(loc_rec)
+
+#Creating fit objects
+vacc_fit <- vacc_wrkflow %>% fit(data = mydata)
+hc_fund_fit <- healthcare_fund_wrkflow %>% fit(data = mydata)
+tests_fit <- tests_wrkflow %>% fit(data = mydata)
+loc_fit <- loc_wrkflow %>% fit(data = mydata)
+
+#Looking at the details of each fitted model
+vacc_fit %>% extract_fit_parsnip() %>% tidy()
+hc_fund_fit %>% extract_fit_parsnip() %>% tidy()
+tests_fit %>% extract_fit_parsnip() %>% tidy()
+loc_fit %>% extract_fit_parsnip() %>% tidy()
+
+vacc_stats = glance(vacc_fit)
+hc_fund_stats = glance(hc_fund_fit)
+tests_stats = glance(tests_fit)
+loc_stats = glance(loc_fit)
+
+#Saving tables for later use
+tabhc1_file = here("results", "tablehc1.rds")
+saveRDS(hc_fund_stats, file = tabhc1_file)
+
+tabvacc1_file = here("results", "tablevacc1.rds")
+saveRDS(vacc_stats, file = tabvacc1_file)
+
+tabtests1_file = here("results", "tabletests1.rds")
+saveRDS(tests_stats, file = tabtests1_file)
+
+tabloc1_file = here("results", "tableloc1.rds")
+saveRDS(loc_stats, file = tabloc1_file)
+
+
+#After looking at the models, it looks like the difference between the proportion of recovery and deaths
+#are not affected by the predictor variables. After finding these results and looking at the data, the problem might live within
+#the fact that over half of the difference in proportions are over 0.9. 
+
+#Therefore, my next outcome I will look at will be just the case percentage for each country.
+
+
+
+
+
+######### Analysis Part 2- percentage of cases within a country ###############
+
+fig8 = mydata %>% ggplot(aes(x = logit_prop_diff )) + geom_histogram(binwidth = 0.5) + 
+  ggtitle("Figure 8: Histogram of logit transformation of difference in proportions \n of those who recovered versus those who died \n (by Country)")
+fig8
+
+
