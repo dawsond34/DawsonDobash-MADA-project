@@ -76,10 +76,9 @@ tab3 = mydata %>% mutate(recov_rate = `Total Recovered`/`Total Cases`, death_rat
   select(Country, location, recov_rate, death_rate, `Total Cases`) %>% arrange(desc(death_rate)) %>% 
   {rbind(head(., 5), tail(., 5))}
 
-#This is a histogram showing the distribution of those who are fully vaccinated. We can see that it is right skewed
-#Which is not a surprise but the majority of countries have less than 25% of people fully vaccinated.
-fig5 = mydata %>% ggplot(aes(x = `% of population fully vaccinated`)) + geom_histogram(binwidth = 10) + 
-  ggtitle("Figure 5: Histogram of Percent of People Fully Vaccinated \n (by Country)")
+#This is a histogram showing the distribution of those who are vaccinated. We can see that it is somewhat uniform
+fig5 = mydata %>% ggplot(aes(x = `% of population vaccinated`)) + geom_histogram(binwidth = 10) + 
+  ggtitle("Figure 5: Histogram of Percent of People Vaccinated \n (by Country)")
   
 #This scatterplot is looking at the amount of health care funding a country has compared to the percent of people
 #vaccinated within each country. Since there were only 48 countries that provided their health care funds, this is 
