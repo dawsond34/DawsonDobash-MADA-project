@@ -32,14 +32,14 @@ summarytable = summary(mydata)
 
 #For this scatter plot, I plotted each countries population compare to their total cases of COVID-19.
 #You can see that there are three countries that either has more population or total cases than others
-fig1 = mydata %>% ggplot(aes(x=Population, y=`Total Cases`, label=Country)) + geom_point() + 
+case_vs_pop = mydata %>% ggplot(aes(x=Population, y=`Total Cases`, label=Country)) + geom_point() + 
   geom_text(aes(label=ifelse(`Total Cases`>20000000, as.character(Country),'')), hjust=.3,vjust=1) + 
-            ggtitle("Figure 1: Scatterplot of Total Cases by Population for each Country \n Labeling some outliers")
+            ggtitle("Scatterplot of Total Cases by Population for each Country \n Labeling some outliers")
 
 #This scatter plot is in response to looking at only countries that has less than 40 million people. This is to
 #show the distribution of the other countries.
-fig2 = mydata %>% filter(Population <= 40000000) %>% ggplot(aes(x=Population, y=`Total Cases`)) + geom_point() + 
-  ggtitle("Figure 2: Scatterplot of Total Cases by Population for each Country \n under the Population of 40 million")
+case_vs_pop2 = mydata %>% filter(Population <= 40000000) %>% ggplot(aes(x=Population, y=`Total Cases`)) + geom_point() + 
+  ggtitle("Scatterplot of Total Cases by Population for each Country \n under the Population of 40 million")
 
 #I wanted to see the top 10 Countries with the most cases proportionally to their population. I included the 
 #continent that are on just to see if there was any connection. We can see that there is a good mixture of countries 
@@ -51,16 +51,16 @@ tab1 = mydata %>% mutate(totcase_percent = (`Total Cases`/Population)*100) %>% a
 #that the same three countries have much larger numbers than all of the other ones. Just by the look of this
 #It looks to have a simple linear relationship. I wanted to see if there were any countries that could be doing the 
 #recovery/health care process.
-fig3 = mydata %>% ggplot(aes(y=`Total Recovered`, x=`Total Cases`, label = Country)) + geom_point() + 
+recov_vs_case = mydata %>% ggplot(aes(y=`Total Recovered`, x=`Total Cases`, label = Country)) + geom_point() + 
   geom_text(aes(label = ifelse(`Total Cases` > 20000000, as.character(Country),''))) + 
-  ggtitle("Figure 3: Scatterplot of Total Recovered by Total Cases \n with labels for Countries over 20 million")
+  ggtitle("Scatterplot of Total Recovered by Total Cases \n with labels for Countries over 20 million")
 
 #Just like before, I subsetted the countries to only those who had less than 20 million cases to look at the bulk
 #of the countries and the distribution. We can see is it really a linear relationship for all countries and no countries
 #have a lot more recovered cases.
-fig4 = mydata %>% filter(`Total Cases` <= 20000000) %>% ggplot(aes(y=`Total Recovered`, x=`Total Cases`, label = Country)) + 
+recov_vs_case2 = mydata %>% filter(`Total Cases` <= 20000000) %>% ggplot(aes(y=`Total Recovered`, x=`Total Cases`, label = Country)) + 
   geom_point() + geom_text(aes(label=ifelse(`Total Cases` > 3000000, as.character(Country),''))) + 
-  ggtitle("Figure 4: Scatterplot of Total Recovered by Total Cases for only Countries under 20 million cases \n (labeling for total cases over 3 million)")
+  ggtitle("Scatterplot of Total Recovered by Total Cases for only Countries under 20 million cases \n (labeling for total cases over 3 million)")
 
 #I then wanted to look at the recovery rate and which countries had the highest and lowest. Therefore, I used
 #the head and tail functions to give the top 5 and bottom 5 recovery rate countries. Included in this table is also 
@@ -76,29 +76,25 @@ tab3 = mydata %>% mutate(recov_rate = `Total Recovered`/`Total Cases`, death_rat
   select(Country, location, recov_rate, death_rate, `Total Cases`) %>% arrange(desc(death_rate)) %>% 
   {rbind(head(., 5), tail(., 5))}
 
-#This is a histogram showing the distribution of those who are vaccinated. We can see that it is somewhat uniform
-fig5 = mydata %>% ggplot(aes(x = `% of population vaccinated`)) + geom_histogram(binwidth = 10) + 
-  ggtitle("Figure 5: Histogram of Percent of People Vaccinated \n (by Country)")
-  
 #This scatterplot is looking at the amount of health care funding a country has compared to the percent of people
 #vaccinated within each country. Since there were only 48 countries that provided their health care funds, this is 
 #only showing those countries. We can see that they is definitely some positive correlation between funds and people 
 #vaccinated with the United States as the one country that looks to have more funding but not as much people vaccinated.
-fig6 = mydata %>% ggplot(aes(x=Value, y=`% of population fully vaccinated`, label = Country)) + 
+vacc_vs_hc = mydata %>% ggplot(aes(x=Value, y=`% of population fully vaccinated`, label = Country)) + 
   geom_point() + geom_text(aes(label=Country)) + 
-  ggtitle("Figure 6: Scatterplot of Percent of People Fully Vaccinated by Health Care Funds \n (by Country)") +
+  ggtitle("Scatterplot of Percent of People Fully Vaccinated by Health Care Funds \n (by Country)") +
   xlab("Health Care Funds")
 
 #This is a histogram of the difference in proportions of those who are recovered and who died with each denominator as
 #number of cases.
-fig7 = mydata %>% ggplot(aes(x = prop_diff_recov_vs_death )) + geom_histogram(binwidth = 0.05) + 
-  ggtitle("Figure 7: Histogram of Difference in proportions \n of those who recovered versus those who died \n (by Country)")
-fig7
+prop_diff_recov_died = mydata %>% ggplot(aes(x = prop_diff_recov_vs_death )) + geom_histogram(binwidth = 0.05) + 
+  ggtitle("Figure 1.1: Histogram of Difference in proportions \n of those who recovered versus those who died \n (by Country)")
+
 
 #Looking at the distribution using a histogram
-fig8 = mydata %>% ggplot(aes(x = pct_cases)) + geom_histogram(binwidth = 2) + 
-  ggtitle("Figure 8: Histogram of Percentage of cases\n (by Country)")
-fig8
+perc_case = mydata %>% ggplot(aes(x = pct_cases)) + geom_histogram(binwidth = 2) + 
+  ggtitle("Histogram of Percentage of cases\n (by Country)")
+
 
 
 #save data frame table to file for later use in manuscript
@@ -116,29 +112,27 @@ saveRDS(tab3, file = tab3_file)
 
 
 #save figures
-fig1_file = here("results","figure1.png")
-ggsave(filename = fig1_file, plot=fig1) 
+fig1_file = here("results","case_vs_pop.png")
+ggsave(filename = fig1_file, plot=case_vs_pop) 
 
-fig2_file = here("results","figure2.png")
-ggsave(filename = fig2_file, plot=fig2) 
+fig2_file = here("results","case_vs_pop2.png")
+ggsave(filename = fig2_file, plot=case_vs_pop2) 
 
-fig3_file = here("results","figure3.png")
-ggsave(filename = fig3_file, plot=fig3) 
+fig3_file = here("results","recov_vs_case.png")
+ggsave(filename = fig3_file, plot=recov_vs_case) 
 
-fig4_file = here("results","figure4.png")
-ggsave(filename = fig4_file, plot=fig4) 
+fig4_file = here("results","recov_vs_case2.png")
+ggsave(filename = fig4_file, plot=recov_vs_case2) 
 
-fig5_file = here("results","figure5.png")
-ggsave(filename = fig5_file, plot=fig5) 
+fig5_file = here("results","vacc_vs_hc.png")
+ggsave(filename = fig5_file, plot=vacc_vs_hc) 
 
-fig6_file = here("results","figure6.png")
-ggsave(filename = fig6_file, plot=fig6) 
+fig6_file = here("results","prop_diff_recov_died.png")
+ggsave(filename = fig6_file, plot=prop_diff_recov_died) 
 
-fig7_file = here("results","figure7.png")
-ggsave(filename = fig7_file, plot=fig7)
+fig7_file = here("results","perc_case.png")
+ggsave(filename = fig7_file, plot=perc_case)
 
-fig8_file = here("results","figure8.png")
-ggsave(filename = fig8_file, plot=fig8)
 
 
 ######################################
@@ -147,10 +141,10 @@ ggsave(filename = fig8_file, plot=fig8)
 
 #Models 1 and 11 are looking at making models using binomial and quasibinomial as their family types. Included were summary tables
 #for each that show model information
-model1 = glm(prop_diff_recov_vs_death ~ prop_vacc, weights = `Total Cases`, data = mydata, family = "binomial")
+model1 = glm(prop_diff_recov_vs_death ~ `% of population vaccinated`, weights = `Total Cases`, data = mydata, family = "binomial")
 summary(model1)
 
-model11 = glm(prop_diff_recov_vs_death ~ prop_vacc, weights = `Total Cases`, data = mydata, family = "quasibinomial")
+model11 = glm(prop_diff_recov_vs_death ~ `% of population vaccinated`, weights = `Total Cases`, data = mydata, family = "quasibinomial")
 summary(model11)
 
 
@@ -169,13 +163,13 @@ mydata$logit_prop_diff = logit(mydata$prop_diff_recov_vs_death)
 
 #This is a histogram of the logit difference in proportions of those who are recovered and who died with each denominator as
 #number of cases.
-fig9 = mydata %>% ggplot(aes(x = logit_prop_diff )) + geom_histogram(binwidth = 0.5) + 
-  ggtitle("Figure 9: Histogram of logit transformation of difference in proportions \n of those who recovered versus those who died \n (by Country)")
-fig9
+log_prop_diff_hist = mydata %>% ggplot(aes(x = logit_prop_diff )) + geom_histogram(binwidth = 0.5) + 
+  ggtitle("Figure 1.2: Histogram of logit transformation of difference in proportions \n of those who recovered versus those who died \n (by Country)")
+log_prop_diff_hist
 
 #Saving figure * to a location for future references
-fig9_file = here("results","figure9.png")
-ggsave(filename = fig9_file, plot=fig9)
+fig9_file = here("results","log_prop_diff_hist.png")
+ggsave(filename = fig9_file, plot=log_prop_diff_hist)
 
 
 #Creating a specific model type via tidymodels
@@ -234,97 +228,3 @@ saveRDS(loc_stats, file = tabloc1_file)
 
 
 
-######### Analysis Part 2- percentage of cases within a country ###############
-
-
-#Creating a recipe for each simple linear regression
-vacc_rec2 = recipe(pct_cases~ `% of population vaccinated`, data = mydata)
-healthcare_fund_rec2 = recipe(pct_cases~Value, data = mydata)
-tests_rec2 = recipe(pct_cases~test_per_person, data = mydata)
-loc_rec2 = recipe(pct_cases~location, data = mydata)
-
-#Creating workflows based on the different recipes above
-vacc_wrkflow2 <- workflow() %>% add_model(lm_mod) %>% add_recipe(vacc_rec2)
-healthcare_fund_wrkflow2 <- workflow() %>% add_model(lm_mod) %>% add_recipe(healthcare_fund_rec2)
-tests_wrkflow2 <- workflow() %>% add_model(lm_mod) %>% add_recipe(tests_rec2)
-loc_wrkflow2 <- workflow() %>% add_model(lm_mod) %>% add_recipe(loc_rec2)
-
-#Creating fit objects
-vacc_fit2 <- vacc_wrkflow2 %>% fit(data = mydata)
-hc_fund_fit2 <- healthcare_fund_wrkflow2 %>% fit(data = mydata)
-tests_fit2 <- tests_wrkflow2 %>% fit(data = mydata)
-loc_fit2 <- loc_wrkflow2 %>% fit(data = mydata)
-
-#Looking at the details of each fitted model
-vacc_fit2 %>% extract_fit_parsnip() %>% tidy()
-hc_fund_fit2 %>% extract_fit_parsnip() %>% tidy()
-tests_fit2 %>% extract_fit_parsnip() %>% tidy()
-loc_fit2 %>% extract_fit_parsnip() %>% tidy()
-
-vacc_stats2 = glance(vacc_fit2)
-hc_fund_stats2 = glance(hc_fund_fit2)
-tests_stats2 = glance(tests_fit2)
-loc_stats2 = glance(loc_fit2)
-
-#Saving tables for later use
-tabhc2_file = here("results", "tablehc2.rds")
-saveRDS(hc_fund_stats2, file = tabhc2_file)
-
-tabvacc2_file = here("results", "tablevacc2.rds")
-saveRDS(vacc_stats2, file = tabvacc2_file)
-
-tabtests2_file = here("results", "tabletests2.rds")
-saveRDS(tests_stats2, file = tabtests2_file)
-
-tabloc2_file = here("results", "tableloc2.rds")
-saveRDS(loc_stats2, file = tabloc2_file)
-
-#Visualization of the simple linear regression models
-#Simple scatterplots of these simple linear regressions
-vacc_scatterplot <- mydata %>% ggplot(aes(x=`% of population vaccinated`, y = pct_cases)) + geom_point() + 
-  ggtitle("Figure 10: Scatterplot of Percent of People Fully Vaccinated and Percentage of Cases \n (by Country)") 
-vacc_scatterplot
-
-hc_fund_scatterplot <- mydata %>% ggplot(aes(x=Value, y = pct_cases)) + geom_point() + 
-  ggtitle("Figure 11: Scatterplot of Healthcare funds and Percentage of Cases \n (by Country)") +
-  xlab("Health Care Funds")
-hc_fund_scatterplot
-
-tests_scatterplot <- mydata %>% ggplot(aes(x=test_per_person, y = pct_cases)) + geom_point()
-tests_scatterplot
-
-tests_scatterplot2 <- mydata %>% filter(test_per_person < 2) %>% ggplot(aes(x=test_per_person, y = pct_cases)) + geom_point()  + 
-  ggtitle("Figure 12: Scatterplot of COVID-19 tests per person and Percentage of Cases \n (by Country)") 
-tests_scatterplot2
-
-#Simple boxplot of difference in proportions by continent
-loc_boxplot <- mydata %>% ggplot(aes(x=location, y = pct_cases)) + geom_boxplot()  + 
-  ggtitle("Figure 13: Histogram of the percent of cases by location \n (for each Country)") +
-  xlab("Continent")
-loc_boxplot
-
-#Save figures to result folder
-fig10_file = here("results","figure10.png")
-ggsave(filename = fig10_file, plot=vacc_scatterplot)
-
-fig11_file = here("results","figure11.png")
-ggsave(filename = fig11_file, plot=hc_fund_scatterplot)
-
-fig12_file = here("results","figure12.png")
-ggsave(filename = fig12_file, plot=tests_scatterplot2)
-
-fig13_file = here("results","figure13.png")
-ggsave(filename = fig13_file, plot=loc_boxplot)
-
-
-
-
-
-
-#Multivariable regression
-mult_reg_rec1 = recipe(pct_cases ~ `% of population vaccinated` + location, data=mydata)
-
-mult_reg_wrkflow1 <- workflow() %>% add_model(lm_mod) %>% add_recipe(mult_reg_rec1)
-mult_reg_fit1 <- mult_reg_wrkflow1 %>% fit(data = mydata)
-mult_reg_fit1 %>% extract_fit_parsnip() %>% tidy()
-mult_reg_stats = glance(mult_reg_fit1)

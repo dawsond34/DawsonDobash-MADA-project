@@ -23,6 +23,8 @@ data_location5 <- here::here("data","raw_data","Covid Data - Europe.csv")
 data_location6 <- here::here("data","raw_data","Covid Data - North America.csv")
 data_location7 <- here::here("data","raw_data","Covid Data - Oceania.csv")
 data_location8 <- here::here("data","raw_data","Covid Data - South America.csv")
+data_location9 <- here::here("data","raw_data","GDP per capita.csv")
+data_location10 <- here::here("data","raw_data","Country_Govt.csv")
 
 #load data from the data locations specified for each data set 
 
@@ -34,6 +36,8 @@ europe <- readr::read_csv(data_location5)
 n_america <- readr::read_csv(data_location6)
 oceania <- readr::read_csv(data_location7)
 s_america <- readr::read_csv(data_location8)
+gdp <- readr::read_csv(data_location9)
+govt <- readr::read_csv(data_location10)
 
 
 #take a look at the data.I only included looking at the africa data set because the other continent data sets have the
@@ -92,6 +96,22 @@ clean_funds2$Country = countrycode(clean_funds2$LOCATION, "iso3c", "country.name
 clean_funds2$Country = ifelse(clean_funds2$Country == "Czechia", "Czech Republic", 
                               ifelse(clean_funds2$Country == "United Kingdom", "UK", clean_funds2$Country))
 
+gdp <- gdp %>% mutate(ifelse(Country == "United Kingdom", "UK", 
+                             ifelse(Country == "Bahamas, The", "Bahamas", 
+                                    ifelse(Country == "Brunei Darussalam", "Brunei", 
+                                           ifelse(Country == "Cabo Verde", "Cape Verde", 
+                                                  ifelse(Country == "Congo, Dem. Rep.", "Congo", 
+                                                         ifelse(Country == "Egypt, Arab Rep.", "Egypt", 
+                                                                ifelse(Country == "Gambia, The", "Gambia", 
+                                                                       ifelse(Country == "Hong Kong SAR, China", "Hong Kong", 
+                                                                              ifelse(Country == "Iran, Islamic Rep.", "Iran", 
+                                                                                     ifelse(Country == "Cote d'Ivoire", "Ivory Coast", 
+                                                                                            ifelse(Country == "Congo, Rep.", "Republic of the Congo", 
+                                                                                                   ifelse(Country == "Russian Federation", "Russia", 
+                                                                                                          ifelse(Country == "Slovak Republic", "Slovakia", 
+                                                                                                                 ifelse(Country == "Korea, Rep.", "South Korea", Country))))))))))))))) %>%
+  mutate(Country = `ifelse(...)`) %>% select(-`ifelse(...)`)
+
 #Cleaning the vaccine data set
 
 clean_vaccine = drop_na(vaccine)
@@ -111,15 +131,23 @@ merged_data = merge(clean_world, clean_vaccine, by="Country")
 #observations from the combined data set. I am also removing the variable LOCATION as it is a redundant variable now
 
 merged_data2 = merge(merged_data, clean_funds2, by="Country", all.x = T)
-merged_data2 = select(merged_data2, -LOCATION)
+merged_data3 = merge(merged_data2, gdp, by="Country", all.x = T)
+merged_data4 = merge(merged_data3, govt, by="Country", all.x = T)
+merged_data4 <- merged_data4 %>%  select(-LOCATION, -"2019")
 
 #Need to create some more variables such as proportions
-processeddata <- merged_data2 %>% mutate(prop_death = `Total Deaths`/`Total Cases`,
+processeddata <- merged_data4 %>% mutate(prop_death = `Total Deaths`/`Total Cases`,
                                          prop_recov = `Total Recovered`/`Total Cases`,
                                          pct_cases = (`Total Cases`/Population)*100,
                                          test_per_person = `Total Tests`/Population,
                                          prop_diff_recov_vs_death = prop_recov - prop_death,
-                                         location = as.factor(location)) %>% filter(`Total Cases` >= 1000)
+                                         location = as.factor(location),
+                                         prop_vacc = `% of population vaccinated`/100,
+                                         logit_vacc = logit(prop_vacc),
+                                         gdp_per_capita = as.numeric(gsub(",", "",`2020`)),
+                                         government = ifelse(government == "Absolute Monarchy" | government == "Constitutional Monarchy", "Monarchy", government)) %>% 
+  filter(`Total Cases` >= 1000) %>% select(-`2020`)
+
 
 #Looking at the complete data set
 

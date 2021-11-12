@@ -1,6 +1,6 @@
 # Overview
 
-Here is my MADA project. The information and background for this project is within the introduction section of the manuscript document. I have included the data sets I will possibly use within the raw data folder. I also added some code to the processing script on reading in the data ans showing what the data looks like. I included 3 data sets out of the 8 because one shows the same information as the other data sets not included just in a different region of the world. 
+Here is my MADA project. The information and background for this project is within the introduction section of the manuscript document. I have included the data sets I will possibly use within the raw data folder. I also added some code to the processing script on reading in the data ans showing what the data looks like. 
 
 # Pre-requisites
 
@@ -21,6 +21,7 @@ To run the code, you first need to run the processing script first in the proces
 ### Code
 **processingscript.R** cleaning data and creating a processed data set
 **analysisscript.R** Exploratory analysis and other analyses
+**main_analysis.R** Main analysis of project
 
 ### Data
 **raw_data folder** Includes all the raw data sets
@@ -33,4 +34,6 @@ This folder contains all of the figures and tables created from the analysis scr
 
 ### Products
 
-This folder contains the manuscript. 
+This folder contains the manuscript and the supplemental materials
+
+**SUPPLEMENTAL MATERIALS NOT FINISHED AND A WORK IN PROGRESS**
