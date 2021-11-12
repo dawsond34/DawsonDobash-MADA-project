@@ -17,8 +17,18 @@ csl: ../apa.csl
 
 
 
-# Summary/Abstract
-_Write a summary of your project._
+# Abstract
+COVID-19 has been the talk of the world for the past two years, and it is still prevalent. The affects of COVID-19 not only affected individual people, but it also affected businesses, health protocols, and the economy of governments. It has affected all countries not only specific to a type of country which is the scary part. It is truly indeed a pandemic.
+
+I am interested in looking at the difference between the proportion of those who recovered to those who have died for each country in the world. I am also looking at how the proportion of people vaccinated in each country is affected by multiple factors. The predictors I will be considering are: percent of cases within a population, continent the country is on, number of tests per person, gdp per capita, proportion of those who died, government type, and health care funds.
+
+By looking at some simple linear regressions and other exploratory analysis, I determined due to how high the recovery rate is within each country overall and no association based on R-squared values, the difference in proportions did not change based on multiple factors.
+
+While looking at vaccination proportions, I decided to do some analyses using training/test data sets and applying them to find the RMSE of the full model and a null model. When finding the RMSE, I found that the full model does a better job in fitting the data compared to the null model. This is a good sign to share that some combination of predictors have an association to the proportion of vaccinated people for each country. 
+
+The next analysis was creating a machine learning modeling technique called the LASSO model. This type of modeling will create multiple models from a five-fold cross-validation and a tuning grid which will try to find the best performing model. From the LASSO we find that model 25 give the best model. 
+
+**Need to find a way to extract this model**
 
 
 # Introduction 
