@@ -14,113 +14,84 @@ output:
 bibliography: ../references.bib
 csl: ../apa.csl
 ---
+This document displays some supplemental material to the analysis. 
 
+**Supplemental material for question 1**
 
-A table summarizing the data.
+This table is showing statistics for the simple linear regression between the predictor health care funds with the outcome being the logit transformation of the proportional difference between recovery and death rates. This is supplemented for table 1.2.
 
+This helps describe that no predictors are good in predicting the outcome with a low R-squared.
 
-```{r summarytable,  echo=FALSE}
-resulttable=readRDS("../../results/summarytable.rds")
-knitr::kable(resulttable, caption = 'Data summary table.')
-```
-
-A table of the top 10 countries with the highest percentage of cases by population. We can see that there are a variety of locations and that Montenegro and Czech Republic are the highest 2 countries with the most cases by population.
-
-
-```{r table1,  echo=FALSE}
-tab1=readRDS("../../results/table1.rds")
-knitr::kable(tab1)
-```
-
-A table of the top 5 and bottom 5 recovery rates also sharing the total cases numbers.It looks that Asia dominates the top 5 countries for recovery rate. For the bottom 5, there is a mixture of locations. We can also see that the recovery rate and death rate for the bottom 5 teams do not add up to 100 or close to it. This means there are a lot of active cases. 
-
-
-```{r table2,  echo=FALSE}
-tab2=readRDS("../../results/table2.rds")
-knitr::kable(tab2)
-```
-
-A table  of the top 5 and bottom 5 countries for death rate. We can see that Vanuatu only has a total of 4 cases but Yemen also has a significantly large rate then the next top country, Mexico. We can also see that Asia dominates the lowest death rates. 
-
-
-```{r table3,  echo=FALSE}
-tab3=readRDS("../../results/table3.rds")
+```{r table regr for hc,  echo=FALSE}
+tab3=readRDS("../../results/supp_mat/tablehc1.rds")
 knitr::kable(tab3)
 ```
 
+This table is showing statistics for the simple linear regression between the predictor number of tests performed with the outcome being the logit transformation of the proportional difference between recovery and death rates. This is supplemented for table 1.2.
 
+This helps describe that no predictors are good in predicting the outcome with a low R-squared.
 
-A scatterplot figure  of total cases by population. United States, India, and Brazil are some outliers of the countries.
-
-```{r figure1,  fig.cap='Analysis figure.', echo=FALSE}
-knitr::include_graphics("../../results/figure1.png")
+```{r table regr for tests,  echo=FALSE}
+tab4=readRDS("../../results/supp_mat/tabletests1.rds")
+knitr::kable(tab4)
 ```
 
-A scatterplot figure of total cases by population filtered down to countries with less than 40 million population. We can see that the total cases are spread out. 
+This table is showing statistics for the simple linear regression between the predictor location, which is the continent each country is associated with, with the outcome being the logit transformation of the proportional difference between recovery and death rates. This is supplemented for table 1.2.
 
-```{r figure2,  fig.cap='Analysis figure.', echo=FALSE}
-knitr::include_graphics("../../results/figure2.png")
-```
+This helps describe that no predictors are good in predicting the outcome with a low R-squared.
 
-A scatterplot figure of total recovered patients by total cases. We can see just like in figure 1 that the United States, India, and Brazil have a overwhelmingly more cases than other countries. Therefore in figure 4, we will explore the majority of the countries.
-
-```{r figure3,  fig.cap='Analysis figure.', echo=FALSE}
-knitr::include_graphics("../../results/figure3.png")
-```
-
-A scatterplot figure of the same plot as before just filtering countries with less than 20 million cases. We can see a linear relationship between the recovered to total cases. It looks like a slope of 1. 
-
-```{r figure4,  fig.cap='Analysis figure.', echo=FALSE}
-knitr::include_graphics("../../results/figure4.png")
+```{r table regr for loc,  echo=FALSE}
+tab5=readRDS("../../results/supp_mat/tableloc1.rds")
+knitr::kable(tab5)
 ```
 
 
-A scatterplot figure of percent of people fully vaccinated by health care funding. We can see that it is a linear relationship with a positive correlation. We can also see that the United States is out of the norm where they spend a lot more on health care funding compared to the percent of people fully vaccinated. 
+**Supplemental material for question 2**
 
-```{r figure6,  fig.cap='Analysis figure.', echo=FALSE}
-knitr::include_graphics("../../results/figure6.png")
-```
+This table is showing statistics for the simple linear regression between the predictor percentage of cases with the outcome being the logit transformation of the proportion of people vaccinated. 
 
-A histogram figure of the percentage of cases per population. We can see that this data is highly skewed to the right.
-
-```{r figure8,  fig.cap='Analysis figure.', echo=FALSE}
-knitr::include_graphics("../../results/figure8.png")
-```
-
-
-
-
-
-We can see with looking at figure 5 that the percentage of cases are roughly bimodal or even right skewed. For now, I will proceed with doing some simple linear regression. Below shows model statistics for each model and a visual showing the relationship between the two variables.
-
-Figure 10 is showing statistics for the predictor percentage of cases.
 ```{r vaccine pct,  echo=FALSE}
-knitr::include_graphics("../../results/figure10.png")
-
-tab9=readRDS("../../results/tablepctcases2.rds")
+tab9=readRDS("../../results/supp_mat/tablepctcases2.rds")
 knitr::kable(tab9)
 ```
 
-Figure 11 is showing statistics for the predictor health care funds.
-```{r health care,  echo=FALSE}
-knitr::include_graphics("../../results/figure11.png")
+This table is showing statistics for the simple linear regression between the predictor GDP per capita with the outcome being the logit transformation of the proportion of people vaccinated. 
 
-tab10=readRDS("../../results/tablehc2.rds")
+```{r health care,  echo=FALSE}
+tab10=readRDS("../../results/supp_mat/tablegdp2.rds")
 knitr::kable(tab10)
 ```
 
-Figure 12 is showing statistics for the predictor number of tests per person.
-```{r Tests,  echo=FALSE}
-knitr::include_graphics("../../results/figure12.png")
+This table is showing statistics for the simple linear regression between the predictor number of COVID-19 tests per person with the outcome being the logit transformation of the proportion of people vaccinated. 
 
-tab11=readRDS("../../results/tabletests2.rds")
+```{r Tests,  echo=FALSE}
+tab11=readRDS("../../results/supp_mat/tabletests2.rds")
 knitr::kable(tab11)
 ```
 
-Figure 13 is showing statistics for the predictor location which specifies the continent for each country.
-```{r Location,  echo=FALSE}
-knitr::include_graphics("../../results/figure13.png")
+This table is showing statistics for the simple linear regression between the predictor location which is the continent with the outcome being the logit transformation of the proportion of people vaccinated. 
 
-tab12=readRDS("../../results/tableloc2.rds")
+```{r Location,  echo=FALSE}
+tab12=readRDS("../../results/supp_mat/tableloc2.rds")
 knitr::kable(tab12)
 ```
+
+
+This figure shows that there is no trend between vaccinations and cases until you get out to over 10% of the population had cases of COVID-19. The vaccination numbers range a lot when there is a low perecentage of cases compared to the countries population.  
+
+```{r case vs vacc, echo=FALSE}
+knitr::include_graphics("../../results/supp_mat/cases_vs_vacc.png")
+```
+
+
+This figure shows the tuning process in a visual. The best model is represented by the lowest RMSE within the dip. 
+
+```{r tune process, echo=FALSE}
+knitr::include_graphics("../../results/supp_mat/lasso_tune_process.png")
+```
+
+
+
+
+
+

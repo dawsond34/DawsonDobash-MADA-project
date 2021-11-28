@@ -11,6 +11,7 @@ library(dplyr) #for data processing
 library(here) #to set paths
 library(tidyverse) #for cleaning and 'tidying' the data
 library(countrycode) #changes country codes to full names
+library(gtools)
 
 #path to data
 #note the use of the here() package and not absolute paths

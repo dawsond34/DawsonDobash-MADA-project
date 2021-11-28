@@ -1,5 +1,5 @@
 ---
-title: "MADA Project Manuscript"
+title: "MADA Project: COVID-19 Vaccinations and recovery"
 subtitle: ""
 author: Dawson Dobash
 date: "`r Sys.Date()`"
@@ -46,15 +46,15 @@ I plan on combining the data sets into one with the variable combining them all 
 
 Links to the locations I received the data are below:
 
-https://data.oecd.org/healthres/health-spending.htm
+[https://data.oecd.org/healthres/health-spending.htm](https://data.oecd.org/healthres/health-spending.htm)
 
-https://www.kaggle.com/iamsouravbanerjee/covid19-dataset-world-and-continent-wise?select=Covid+Data+-+World.csv
+[https://www.kaggle.com/iamsouravbanerjee/covid19-dataset-world-and-continent-wise?select=Covid+Data+-+World.csv](https://www.kaggle.com/iamsouravbanerjee/covid19-dataset-world-and-continent-wise?select=Covid+Data+-+World.csv)
 
-https://www.kaggle.com/anandhuh/latest-worldwide-vaccine-data
+[https://www.kaggle.com/anandhuh/latest-worldwide-vaccine-data](https://www.kaggle.com/anandhuh/latest-worldwide-vaccine-data)
 
-https://data.worldbank.org/indicator/NY.GDP.PCAP.CD
+[https://data.worldbank.org/indicator/NY.GDP.PCAP.CD](https://data.worldbank.org/indicator/NY.GDP.PCAP.CD)
 
-https://en.wikipedia.org/wiki/List_of_countries_by_system_of_government
+[https://en.wikipedia.org/wiki/List_of_countries_by_system_of_government](https://en.wikipedia.org/wiki/List_of_countries_by_system_of_government)
 
 
 ## Questions/Hypotheses to be addressed
@@ -80,14 +80,14 @@ One disclosure I have for this is that one data set, health care funds, only had
 
 To look at a more descriptive explanation of all of the steps I took in data cleaning and importing, go to the processing script where it has comments for every line of code. 
 
-## Full analysis
 
-
-### Difference in proportions of recovery and deaths
+## Question 1: Difference in proportions of recovery and deaths
 
 Table 1.1 displays the top five and bottom five death rates. Also within this, it shows their corresponding recovery rates as well. We can see that the bottom five death rates are from Asia but also the highest, Yemen, is also within the Asia continent as well. 
+<br /> 
+<br /> 
 
-Table 1.1
+Table 1.1: Top 5 and bottom 5 death rates by country
 ```{r table1,  echo=FALSE}
 tab1=readRDS("../../results/table3.rds")
 knitr::kable(tab1)
@@ -95,59 +95,36 @@ knitr::kable(tab1)
 
 Figure 1.1 shows a histogram figure that describes the difference in proportions between those who recovered versus the proportion of those who died. From the histogram we can see that this difference is left skewed as most countries have a much higher recovery rate with only a some having more of a lower difference meaning lower recovery rates. This is very worrisome for the analysis as most of the countries are over 0.80 in the difference. 
 
-```{r figure 1.1,  fig.cap='Analysis figure.', echo=FALSE}
+```{r figure 1.1, echo=FALSE}
 knitr::include_graphics("../../results/prop_diff_recov_died.png")
 ```
 
 
 We can see in figure 1.1 that this data is fairly skewed. Therefore, I will do a logit transformation of the outcome to make it more normal as shown in figure 1.2. 
 
-```{r figure 1.2,  fig.cap='Analysis figure.', echo=FALSE}
+```{r figure 1.2, echo=FALSE}
 knitr::include_graphics("../../results/log_prop_diff_hist.png")
 ```
 
 Before I decided on the logit transformation, I first decided to try this difference in proportions outcome I made within a binomial model and then a quasibinomial using the values of total cases as my weight to see how the deviance and dispersion values are. After running two simple models, the results were showing very high values for these statistics. Therefore this is how I decided on using the logit transformation. 
 
-Using the logit transformation, I ran 4 simple linear regression models. Below I provide the statistics of each of the models within Tables 1.2-1.5.
+Using the logit transformation, I ran 4 simple linear regression models. Below I provide the statistics of one of the models within Tables 1.2.
 
 Table 1.2 is showing statistics for the predictor vaccine percentage.
 
-Table 1.2
+Table 1.2: Summary statistics for linear regression (logit transformation of prop diff of recovery and deaths vs. vaccine)
 ```{r table 1.2,  echo=FALSE}
 tab2=readRDS("../../results/tablevacc1.rds")
 knitr::kable(tab2)
 ```
 
-Table 1.3 is showing statistics for the predictor health care funds.
 
-Table 1.3
-```{r table 1.3,  echo=FALSE}
-tab3=readRDS("../../results/tablehc1.rds")
-knitr::kable(tab3)
-```
-
-Table 1.4 is showing statistics for the predictor number of tests per person.
-
-Table 1.4
-```{r table 1.4,  echo=FALSE}
-tab4=readRDS("../../results/tabletests1.rds")
-knitr::kable(tab4)
-```
-
-Table 1.5 is showing statistics for the predictor location which specifies the continent for each country.
-
-Table 1.5
-```{r table 1.5,  echo=FALSE}
-tab5=readRDS("../../results/tableloc1.rds")
-knitr::kable(tab5)
-```
-
-Looking at all of these tables, we can see that the R^2 values are very low. Therefore none of these predictors shows any association with the logit transformation outcome. Since not even one predictor is good for this outcome, I am going to stop my analysis with this outcome and go to my second question which uses the percent of cases within each country.
+Looking at Table 1.2, we can see that the R^2 values are very low. This is similar to all of the other simple linear regression models. The statistics for the other three models are within the supplemental material. Therefore none of these predictors shows any association with the logit transformation outcome. Since not even one predictor is good for this outcome, I am going to stop my analysis with this outcome and go to my second question which uses the percent of cases within each country.
 
 
-### Percent of people vaccinated for each country
+## Question 2: Percent of people vaccinated for each country
 
-#### Methods
+### Methods
 
 For my main analysis, I will be using the logit transformation of the proportion of people vaccinated within each country as my main outcome. Since I am using the logit transformation, I am creating another data set that is a subset of the overall data set that only includes the variables I will be using for my analysis. The predictor variables I will be testing out on the main outcome are: percent of cases within a population, continent the country is on, number of tests per person, gdp per capita, proportion of those who died, government type, and health care funds. These will create my full model. 
 
@@ -156,11 +133,11 @@ The first part of my main analysis will be using test/training data and finding 
 After comparing the two RMSE, I will be going into more detail on model fitting and tuning. I will be applying my full model a machine learning model, the LASSO model. This will help find the best model I can use for the predictors in predicting the logit transformation of the proportion of people vaccinated. I will be applying this lasso model to both my test and training data created before to make sure the model fits both data sets similarly so show improvement on over-fitting. 
 
 
-#### Exploratory Analysis
+### Exploratory Analysis
 
 Table 2.1 displays percentage of people vaccinated within the top five and bottom five countries. Just by the look of the countries displayed, the less developed countries tend to not have a lot of people vaccinated. It is honestly kind of scary to see some countries are not vaccinated at all or very low.
 
-Table 2.1
+Table 2.1: Top 5 and bottom 5 vaccination percentages by country
 ```{r table 2.1,  echo=FALSE}
 tab21=readRDS("../../results/vacc_tab.rds")
 knitr::kable(tab21)
@@ -169,42 +146,37 @@ knitr::kable(tab21)
 
 Figure 2.1 shows a histogram figure of the percent of vaccinated people. We can see that the histogram is right skewed with the spike around the percentages of 0%. 
 
-```{r figure 2.1,  fig.cap='Analysis figure.', echo=FALSE}
+```{r figure 2.1, echo=FALSE}
 knitr::include_graphics("../../results/vacc_hist.png")
 ```
 
-Figure 2.2 shows that there is no trend between vaccinations and cases until you get out to over 10% of the population had cases of COVID-19. The vaccination numbers range a lot when there is a low perecentage of cases compared to the countries population.  
 
-```{r figure 2.2,  fig.cap='Analysis figure.', echo=FALSE}
-knitr::include_graphics("../../results/cases_vs_vacc.png")
-```
+When looking at Figure 2.2, we can see that those countries who have large values of GDP per capita, their population is more vaccinated. The vaccination number varies when the GDP per capita is relatively low. 
 
-When looking at Figure 2.3, we can see that those countries who have large values of GDP per capita, their population is more vaccinated. The vaccination number, just like in Figure 2.2, varies when the GDP per capita is relatively low. 
-
-```{r figure 2.3,  fig.cap='Analysis figure.', echo=FALSE}
+```{r figure 2.2, echo=FALSE}
 knitr::include_graphics("../../results/gdp_vs_vacc.png")
 ```
 
-Looking at Figure 2.4, this side-by-side boxplot shows that Africa is significantly different to all of the other continents. Africa is historically known is a less developed continent. This could be result in lower supplies to Africa compared to other places in the world. Within the other continents, Europe seems to have th highest median vaccinated proportions. 
+Looking at Figure 2.3, this side-by-side boxplot shows that Africa is significantly different to all of the other continents. Africa is historically known is a less developed continent. This could be result in lower supplies to Africa compared to other places in the world. Within the other continents, Europe seems to have th highest median vaccinated proportions. 
 
-```{r figure 2.4,  fig.cap='Analysis figure.', echo=FALSE}
+```{r figure 2.3, echo=FALSE}
 knitr::include_graphics("../../results/loc_vs_vacc.png")
 ```
 
-Figure 2.5 is showing the logit transformation of the proportion of the population vaccinated. This is due to the skewness of the non-transformed vaccinatio numbers. We see that this is still skewed but its skewed left where most of the data is around that 0 value.  
+Figure 2.4 is showing the logit transformation of the proportion of the population vaccinated. This is due to the skewness of the non-transformed vaccinatio numbers. We see that this is still skewed but its skewed left where most of the data is around that 0 value.  
 
-```{r figure 2.5,  fig.cap='Analysis figure.', echo=FALSE}
+```{r figure 2.4, echo=FALSE}
 knitr::include_graphics("../../results/log_vacc.png")
 ```
 
 
-#### Main Analysis
+### Main Analysis
 
-As specified within the methods section, the first part of my analysis will be comparing the RMSE of my full model to the null model. However, before I do this I will run a correlation matrix of the numberic variables to see if some variables are highly correlated.
+As specified within the methods section, the first part of my analysis will be comparing the RMSE of my full model to the null model. However, before I do this I will run a correlation matrix of the numeric variables to see if some variables are highly correlated.
 
-In Table 2.2 we can see that the two variable, which I suspected, that are highly correlated are health care funds and GDP per capita where value is the health care fund variable. Since those two variables are highly correlated and the health care funds variable only includes 48 observations, I will remove health care funds out of the full model.
+In Table 2.2 we can see that the two variable, which I suspected, that are highly correlated are health care funds (Value) and GDP per capita. Since those two variables are highly correlated and the health care funds variable only includes 48 observations, I will remove health care funds out of the full model.
 
-Table 2.2
+Table 2.2: Correlation martrix of predictors and outcome
 ```{r table 2.2,  echo=FALSE}
 tab22=readRDS("../../results/cor_tab.rds")
 knitr::kable(tab22)
@@ -212,7 +184,7 @@ knitr::kable(tab22)
 
 Now that I have my full model solidified, Table 2.3 shows the summary table and some other statistics of this full model. We can see that our adjusted R-sqaured value is around 0.64 and most of our factors are significant except the proportion of this who died and the COVID tests per person. 
 
-Table 2.3
+Table 2.3: Summary statistics for full model
 ```{r table 2.3,  echo=FALSE}
 tab23=readRDS("../../results/Summ_stat_mult_reg.rds")
 knitr::kable(tab23)
@@ -232,13 +204,13 @@ Table 2.4 shows the two values for the full model where the top is the training 
 
 Comparing Table 2.4 to Table 2.5, which shows the null models results, we can see our full model does a lot better than the null model. The RMSE is a lot worse for the null model. This is a good sign for the data as we now know that these predictors do have some type of association since it is way better than the null model. We can now proceed to creating our LASSO model and tuning this full model to find the best performing model.
 
-Table 2.4
+Table 2.4: RMSE values for full model (training and test data, respectively)
 ```{r table 2.4,  echo=FALSE}
 tab24=readRDS("../../results/Logit_vacc_rmse_tab.rds")
 knitr::kable(tab24)
 ```
 
-Table 2.5
+Table 2.5: RMSE values for null model (training and test data, respectively)
 ```{r table 2.5,  echo=FALSE}
 tab25=readRDS("../../results/Logit_vacc_rmse_null_tab.rds")
 knitr::kable(tab25)
@@ -246,33 +218,30 @@ knitr::kable(tab25)
 
 **LASSO Model**
 
-For the LASSO model, there is some preparation we need to run this. We will use cross validation to create the multiple models included in the LASSO model. This cross validation will be a 5-fold stratified by the outcome. We then, like previously, create a workflow using a specific model type and recipe. The recipe will be the full model recipe but the model type will be different. The LASSO model uses a specific model that has a tuning factor into a linear regression type. Once we have our workflow, we need to make a grid as the LASSO model created multiple models based on the 5-fold cross validation and other factors. From the workflow, we can apply a tuning grid to it. This will produce the variety of models. To find the best model, we an apply a function called show_best and specify RMSE to find the best model in terms of RMSE. After putting this model into a workflow and creating a fit object, we get the statistics of the best model. Figure 2.6 shows the tuning process in a visual. The best model is represented by the lowest RMSE within the dip. 
+For the LASSO model, there is some preparation we need to run this. We will use cross validation to create the multiple models included in the LASSO model. This cross validation will be a 5-fold stratified by the outcome. We then, like previously, create a workflow using a specific model type and recipe. The recipe will be the full model recipe but the model type will be different. The LASSO model uses a specific model that has a tuning factor into a linear regression type. Once we have our workflow, we need to make a grid as the LASSO model created multiple models based on the 5-fold cross validation and other factors. From the workflow, we can apply a tuning grid to it. This will produce the variety of models. To find the best model, we an apply a function called show_best and specify RMSE to find the best model in terms of RMSE. After putting this model into a workflow and creating a fit object, we get the statistics of the best model. 
 
-```{r figure 2.6,  fig.cap='Analysis figure.', echo=FALSE}
-knitr::include_graphics("../../results/lasso_tune_process.png")
-```
 
-Figure 2.7 shows the predicted values to the observed values. Most of the points follow the trend and there seems to show no pattern. We can see this more within Figure 2.8 which is the residual plot. Within Figure 2.8, we could see a slight pattern at the begging points where they are grouped up more.
+Figure 2.5 shows the predicted values to the observed values. Most of the points follow the trend and there seems to show no pattern. We can see this more within Figure 2.6 which is the residual plot. Within Figure 2.6, we could see a slight pattern at the begging points where they are grouped up more.
 
-```{r figure 2.7,  fig.cap='Analysis figure.', echo=FALSE}
+```{r figure 2.5, echo=FALSE}
 knitr::include_graphics("../../results/Pred_vs_obs_value_lasso_train.png")
 ```
 
-```{r figure 2.8,  fig.cap='Analysis figure.', echo=FALSE}
+```{r figure 2.6, echo=FALSE}
 knitr::include_graphics("../../results/Resid_lasso_train.png")
 ```
 
-The last part of the LASSO modeling analysis is fitting the model to the test data to see how well they both look together. To look at the test data results, we need to run a last fit function which just applies the test data to the best model found above. Figure 2.9 and Figure 2.10 show the predicted values versus observed and its residual plot for the test data. Just like the training test, most of the predicted values do have a similar trend and it close to the observed value. The residual plot shows that concerning line of observations for the lower values. This residual plot show more variability in the lower values more. Table 2.6 shows the RMSE values created from this LASSO model. We can see unfortunately these are overall higher and farther apart. It is still better than the null model.
+The last part of the LASSO modeling analysis is fitting the model to the test data to see how well they both look together. To look at the test data results, we need to run a last fit function which just applies the test data to the best model found above. Figure 2.7 and Figure 2.8 show the predicted values versus observed and its residual plot for the test data. Just like the training test, most of the predicted values do have a similar trend and it close to the observed value. The residual plot shows that concerning line of observations for the lower values. This residual plot show more variability in the lower values more. Table 2.6 shows the RMSE values created from this LASSO model. We can see unfortunately these are overall higher compared to the full model numbers. It is still better than the null model however.
 
-```{r figure 2.9,  fig.cap='Analysis figure.', echo=FALSE}
+```{r figure 2.7, echo=FALSE}
 knitr::include_graphics("../../results/Pred_vs_obs_value_lasso_test.png")
 ```
 
-```{r figure 2.10,  fig.cap='Analysis figure.', echo=FALSE}
+```{r figure 2.8, echo=FALSE}
 knitr::include_graphics("../../results/Resid_lasso_test.png")
 ```
 
-Table 2.6
+Table 2.6: Comparing RMSE for training and test split data for LASSO model, respectively 
 ```{r table 2.6,  echo=FALSE}
 tab26=readRDS("../../results/LASSO_rmse_train_tab.rds")
 knitr::kable(tab26)
@@ -282,16 +251,35 @@ knitr::kable(tab262)
 
 ```
 
+This is the product from the LASSO modeling. This is the model produced by LASSO. In Table 2.7, we can see there are 4 predictors and 2 were removed. The predictors that were removed was the proportion of those who died in each country and test per person. However these estimates are based on the logit transformation of our outcome. The last column is the transformation to display the transformed of each predictor applying the exp() function to the estimates.
+
+From the estimates, we can see although there was 2 variables that suppressed to a value of 0 based on the LASSO model, the predictor gdp per capita have roughly a value of 0 which translates to a odds ratio close to 1. Those who include 1 or close to 1 results in a non-significant variable in predicting the outcome. We can see the continent that the country is in also has an affect on proportion vaccinated where the continent Africa is the reference group. The continents that increases the proportion of being vaccinated the most are Asia and South America. We can also see that in terms of government type where a republic government is the reference group, those countries that are a monarchy increase the proportion of having more vaccinations. In opposite affect, a provisional government country lowers the proportion of getting people vaccinated. 
+
+Table 2.7: Summary statistics of LASSO model and predictors with their respected transformed values 
+```{r table 2.7,  echo=FALSE}
+tab27=readRDS("../../results/transform_LASSO.rds")
+knitr::kable(tab27)
+```
+
+
 # Discussion
 
 ## Summary and Interpretation
-_Summarize what you did, what you found and what it means._
+The analysis was split up into two different analyses specified by the two questions. The first analysis was looking at the difference of proportions between recovery and death rates. With some exploratory analysis, no association according to the simple linear regression between multiple predictors and the outcome. Since within some exploratory analysis and very small r-square values, I decided to stop that analysis on the first question and go to the next question. 
+
+<\ br>
+
+The second question pertains to vaccination proportions. Using the logit transformation and applying the LASSO modeling, out of the 6 predictors within the full model, only 4 remained within the equation. These include percent of cases for a country, gdp per capita, the continent the country resides, and the type of government. Out of these, those who have the most impact are location and government type, and gdp per capita has roughly an estimate of 0 which probably has no impact on the proportion of people vaccinated. 
 
 ## Strengths and Limitations
-_Discuss what you perceive as strengths and limitations of your analysis._
+Some strengths to this analysis was that since this topic of COVID-19 is in todays news which means much of the countries information is available in public use. Along with COIVD-19 information, most information of countries are of public use therefore lots of information  was easy to find. 
+
+Some limitations for this analysis was that I was using cumulative data which means as more days pass, this data will become old analyses. Another limitation was although I got the information I wanted, I had to use multiple sources to find them which results in combining data sets and ultimately errors. 
 
 ## Conclusions
-_What are the main take-home messages?_
+We find that due to high high recovery right is for most countries compared to death rates, and no predictors have a large association, according to the simple linear regression r-squared values, the difference in proportion between recovery and death rates is not affected by most predictors. 
+
+We see that the proportion of people vaccinated is associated with the amount of COVID-19 cases, which continent the country is in, and type of government. Given all other variable constant, Asia and South America gives the highest proportional increase compared to Africa, and monarchy governments increase vaccinations compared to republic government countries. 
 
 _Include citations in your Rmd file using bibtex, the list of references will automatically be placed at the end_
 

@@ -19,9 +19,6 @@ data_location <- here::here("data","processed_data","processeddata.rds")
 #load data. 
 mydata <- readRDS(data_location)
 
-#Setting seed
-set.seed(345)
-
 ######### Analysis Part 2- percentage of vaccinated people within a country ###############
 
 ## Correlation Matrix of all predictors ##
@@ -60,13 +57,13 @@ ggsave(filename = figvacc_file, plot= vacc_hist)
 
 #Scatterplots of these simple linear regressions
 case_scatterplot <- mydata %>% ggplot(aes(y=prop_vacc, x = pct_cases)) + geom_point() + 
-  ggtitle("Figure 2.2: Scatterplot of percentage of cases and \n proportion of people vaccinated \n (by Country)") 
+  ggtitle("Scatterplot of percentage of cases and \n proportion of people vaccinated \n (by Country)") 
 fig10_file = here("results","cases_vs_vacc.png")
 ggsave(filename = fig10_file, plot=case_scatterplot)
 
 gdp_per_cap_scatterplot <- mydata %>% ggplot(aes(x=gdp_per_capita, y = prop_vacc)) + geom_point() + 
-  ggtitle("Figure 2.3: Scatterplot of GPD per capita and proportion of people vaccinated \n (by Country)") +
-  xlab("GDP_per_capita")
+  ggtitle("Figure 2.2: Scatterplot of GPD per capita and proportion of \n people vaccinated (by Country)") +
+  xlab("GDP per capita") + ylab("Proportion vaccinated")
 fig11_file = here("results","gdp_vs_vacc.png")
 ggsave(filename = fig11_file, plot=gdp_per_cap_scatterplot)
 
@@ -80,8 +77,8 @@ ggsave(filename = fig12_file, plot=tests_scatterplot2)
 
 #Simple boxplot of proportion of population vaccinated by continent
 loc_boxplot <- mydata %>% ggplot(aes(x=location, y = prop_vacc)) + geom_boxplot()  + 
-  ggtitle("Figure 2.4: Boxplot of the proportion of people vaccinated by location \n (for each Country)") +
-  xlab("Continent")
+  ggtitle("Figure 2.3: Boxplot of the proportion of people vaccinated \n by location (for each Country)") +
+  xlab("Continent") + ylab("Proportion vaccinated")
 fig13_file = here("results","loc_vs_vacc.png")
 ggsave(filename = fig13_file, plot=loc_boxplot)
 
@@ -94,7 +91,8 @@ ggsave(filename = fig14_file, plot=govt_boxplot)
 
 #Scatterplot of logit transformation of proportion of vaccinated people per country
 log_vacc_hist <- mydata %>% ggplot(aes(x = logit_vacc)) + geom_histogram(binwidth = 0.5) + 
-  ggtitle("Figure 2.5: Histogram of the logit transformation \n of proportion of people vaccinated (by country)")
+  ggtitle("Figure 2.4: Histogram of the logit transformation \n of proportion of people vaccinated (by country)") + 
+  xlab("Logit transformed vaccination proportion")
 fig15_file = here("results", "log_vacc.png")
 ggsave(filename = fig15_file, plot= log_vacc_hist)
 
@@ -209,7 +207,8 @@ saveRDS(govt_stats, file = tabgovt_file)
 ## First I am going to limit the data set to only variables I need for modeling
 
 model_data <- mydata %>% select(logit_vacc, pct_cases, location, test_per_person, gdp_per_capita, prop_death, government) %>% 
-  filter(complete.cases(.))
+  filter(complete.cases(.)) %>% mutate(government = as.factor(government),
+                                       government = relevel(government, ref="Republic"))
 
 mult_reg_rec1 = recipe(logit_vacc ~ ., data=model_data)
 mult_reg_wrkflow1 <- workflow() %>% add_model(lm_mod) %>% add_recipe(mult_reg_rec1)
@@ -234,6 +233,8 @@ saveRDS(mult_reg_stats1, file = tabML_file)
 
 #This is splitting the data using a proportion of 1/4 test and 3/4 training
 
+#Setting seed
+set.seed(345)
 
 split_data <- initial_split(model_data, prop = 0.75)
 
@@ -319,7 +320,7 @@ lr_res %>%
   collect_metrics()
 
 #The autoplot function shows basically the process of the tuning process
-lasso_tune_plot <- lr_res %>% autoplot() + ggtitle("Figure 2.6: LASSO Tuning Process")
+lasso_tune_plot <- lr_res %>% autoplot() + ggtitle("LASSO Tuning Process")
 lasso_tune_file = here("results", "lasso_tune_process.png")
 ggsave(filename = lasso_tune_file, plot= lasso_tune_plot)
 
@@ -344,13 +345,15 @@ plot(x, "lambda")
 #Creating the residuals and displaying the scatterplot of the predicted values to the observed values of logit proportion of vaccination using LASSO
 aug_lr <- augment(lr_fit, training) %>% mutate(residual = logit_vacc - .pred)
 lr_predvsobs_plot <- aug_lr %>% ggplot(aes(x=logit_vacc, y=.pred)) + geom_point() + geom_abline(intercept = 0, slope=1) + 
-  ggtitle("Figure 2.7: Scatterplot of predicted values versus the observed values \n of logit transformed proportion of vaccinated people \n with a reference line showing exact prediction \n (for LASSO model)")
+  ggtitle("Figure 2.5: Scatterplot of predicted values versus \n the observed values of logit transformed proportion of \n vaccinated people with a reference line showing \n exact prediction (for LASSO model)") + 
+  xlab("Logit transformation of vaccination proportion") + ylab("Predicted values")
 lr_predvsobs_plot
 scatt_lasso_train_file = here("results", "Pred_vs_obs_value_lasso_train.png")
 ggsave(filename = scatt_lasso_train_file, plot= lr_predvsobs_plot)
 
 #Residual plot
-lr_resid_plot <- aug_lr %>% ggplot(aes(x=.pred, y=residual)) + geom_point() + geom_hline(yintercept = 0) + ggtitle("Figure 2.8: Residual plot for LASSO model (Training Data)")
+lr_resid_plot <- aug_lr %>% ggplot(aes(x=.pred, y=residual)) + geom_point() + geom_hline(yintercept = 0) + 
+  ggtitle("Figure 2.6: Residual plot for LASSO model (Training Data)") + xlab("Predicted values")
 lr_resid_plot
 resid_train_file = here("results", "Resid_lasso_train.png")
 ggsave(filename = resid_train_file, plot= lr_resid_plot)
@@ -381,14 +384,25 @@ lr_test_res <- lr_test_fit %>% augment()
 
 #Scatterplot for predicted versus actual values
 lr_predvsobs_test_plot <- lr_test_res %>% ggplot(aes(x=logit_vacc, y=.pred)) + geom_point() + geom_abline(intercept = 0, slope=1) + 
-  ggtitle("Figure 2.9: Scatterplot of predicted values versus the observed values \n of logit transformed proportion of vaccinated people \n with a reference line showing exact prediction \n (for LASSO model using test data)")
+  ggtitle("Figure 2.7: Scatterplot of predicted values versus the \n observed values of logit transformed proportion of \n vaccinated people with a reference line showing \n exact prediction (for LASSO model using test data)") + 
+  xlab("Logit transformation for vaccination proportion") + ylab("Predicted values")
 lr_predvsobs_test_plot
 scatt_lasso_test_file = here("results", "Pred_vs_obs_value_lasso_test.png")
 ggsave(filename = scatt_lasso_test_file, plot= lr_predvsobs_test_plot)
 
 #Residual plot
-lr_resid_test_plot <- lr_test_res %>% ggplot(aes(x=.pred, y=.resid)) + geom_point() + geom_hline(yintercept = 0) + ggtitle("Figure 2.10: Residual plot for LASSO model \n (using test data)")
+lr_resid_test_plot <- lr_test_res %>% ggplot(aes(x=.pred, y=.resid)) + geom_point() + geom_hline(yintercept = 0) + 
+  ggtitle("Figure 2.8: Residual plot for LASSO model \n (using test data)") + xlab("Predicted values") + ylab("Residuals")
 lr_resid_test_plot
 resid_test_file = here("results", "Resid_lasso_test.png")
 ggsave(filename = resid_test_file, plot= lr_resid_test_plot)
 
+#Summary stat for LASSO model
+lr_summ <- lr_fit %>% extract_fit_parsnip() %>% tidy() %>% filter(estimate != 0)
+tablrsumm_file = here("results", "LASSO_summary_model.rds")
+saveRDS(lr_summ, file = tablrsumm_file)
+
+#Odds ratios for LASSO model 
+Transform_LASSO <- lr_summ %>% mutate(Transformed_value = exp(estimate))
+tabOR_file = here("results", "transform_LASSO.rds")
+saveRDS(Transform_LASSO, file = tabOR_file)

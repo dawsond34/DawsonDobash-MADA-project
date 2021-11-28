@@ -88,7 +88,8 @@ vacc_vs_hc = mydata %>% ggplot(aes(x=Value, y=`% of population fully vaccinated`
 #This is a histogram of the difference in proportions of those who are recovered and who died with each denominator as
 #number of cases.
 prop_diff_recov_died = mydata %>% ggplot(aes(x = prop_diff_recov_vs_death )) + geom_histogram(binwidth = 0.05) + 
-  ggtitle("Figure 1.1: Histogram of Difference in proportions \n of those who recovered versus those who died \n (by Country)")
+  ggtitle("Figure 1.1: Histogram of Difference in proportions \n of those who recovered versus those who died \n (by Country)") + 
+  xlab("Proportion difference between recovery rates and death rates")
 
 
 #Looking at the distribution using a histogram
@@ -164,7 +165,8 @@ mydata$logit_prop_diff = logit(mydata$prop_diff_recov_vs_death)
 #This is a histogram of the logit difference in proportions of those who are recovered and who died with each denominator as
 #number of cases.
 log_prop_diff_hist = mydata %>% ggplot(aes(x = logit_prop_diff )) + geom_histogram(binwidth = 0.5) + 
-  ggtitle("Figure 1.2: Histogram of logit transformation of difference in proportions \n of those who recovered versus those who died \n (by Country)")
+  ggtitle("Figure 1.2: Histogram of logit transformation of difference \n in proportions of those who recovered versus those who died \n (by Country)") + 
+  xlab("Logit transformation of the proportional difference between recovory and death rates")
 log_prop_diff_hist
 
 #Saving figure * to a location for future references
