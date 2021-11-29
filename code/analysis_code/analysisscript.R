@@ -207,16 +207,16 @@ tests_stats = glance(tests_fit)
 loc_stats = glance(loc_fit)
 
 #Saving tables for later use
-tabhc1_file = here("results", "tablehc1.rds")
+tabhc1_file = here("results/supp_mat", "tablehc1.rds")
 saveRDS(hc_fund_stats, file = tabhc1_file)
 
 tabvacc1_file = here("results", "tablevacc1.rds")
 saveRDS(vacc_stats, file = tabvacc1_file)
 
-tabtests1_file = here("results", "tabletests1.rds")
+tabtests1_file = here("results/supp_mat", "tabletests1.rds")
 saveRDS(tests_stats, file = tabtests1_file)
 
-tabloc1_file = here("results", "tableloc1.rds")
+tabloc1_file = here("results/supp_mat", "tableloc1.rds")
 saveRDS(loc_stats, file = tabloc1_file)
 
 

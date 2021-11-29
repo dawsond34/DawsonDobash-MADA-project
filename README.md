@@ -6,14 +6,14 @@ Here is my MADA project. The information and background for this project is with
 
 Please load the R_project called MADA_project.Rproj before running any code. Also check within the data folder there are 9 data sets within the raw data folder. 
 
-To run the code, you first need to run the processing script first in the processing_code folder within the code folder. This will create the cleaned up processed data set from all of the raw data sets. This new processed data set will be put into the processed_data folder. Once we ran the processed script and created the new processed data, we can run the analysis script. 
+To run the code, you first need to run the processing script first in the processing_code folder within the code folder. This will create the cleaned up processed data set from all of the raw data sets. This new processed data set will be put into the processed_data folder. Once we ran the processed script and created the new processed data, we can run the analysis script, and then the main_analysis within the analysis code folder. 
 
 # Structure
 
 * All data goes into the subfolders inside the `data` folder.
 * All code goes into the `code` folder or subfolders.
 * All results (figures, tables, computed values) go into `results` folder or subfolders.
-* All products (manuscripts, supplement, presentation slides, web apps, etc.) go into `products` subfolders.
+* All products (manuscripts, supplements, and references) go into `products` subfolders.
 * See the various `readme.md` files in those folders for some more information.
 
 # Content 
@@ -34,6 +34,4 @@ This folder contains all of the figures and tables created from the analysis scr
 
 ### Products
 
-This folder contains the manuscript and the supplemental materials
-
-**SUPPLEMENTAL MATERIALS NOT FINISHED AND A WORK IN PROGRESS**
+This folder contains the manuscript, the supplemental materials, and reference file

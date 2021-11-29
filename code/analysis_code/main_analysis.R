@@ -58,7 +58,7 @@ ggsave(filename = figvacc_file, plot= vacc_hist)
 #Scatterplots of these simple linear regressions
 case_scatterplot <- mydata %>% ggplot(aes(y=prop_vacc, x = pct_cases)) + geom_point() + 
   ggtitle("Scatterplot of percentage of cases and \n proportion of people vaccinated \n (by Country)") 
-fig10_file = here("results","cases_vs_vacc.png")
+fig10_file = here("results/supp_mat","cases_vs_vacc.png")
 ggsave(filename = fig10_file, plot=case_scatterplot)
 
 gdp_per_cap_scatterplot <- mydata %>% ggplot(aes(x=gdp_per_capita, y = prop_vacc)) + geom_point() + 
@@ -185,16 +185,16 @@ loc_stats3 = glance(loc_fit3)
 govt_stats = glance(govt_fit)
 
 #Saving tables for later use
-tabgdp2_file = here("results", "tablegdp2.rds")
+tabgdp2_file = here("results/supp_mat", "tablegdp2.rds")
 saveRDS(gdp_per_cap_stats3, file = tabgdp2_file)
 
-tabpctcases2_file = here("results", "tablepctcases2.rds")
+tabpctcases2_file = here("results/supp_mat", "tablepctcases2.rds")
 saveRDS(pctcases_stats3, file = tabpctcases2_file)
 
-tabtests2_file = here("results", "tabletests2.rds")
+tabtests2_file = here("results/supp_mat", "tabletests2.rds")
 saveRDS(tests_stats3, file = tabtests2_file)
 
-tabloc2_file = here("results", "tableloc2.rds")
+tabloc2_file = here("results/supp_mat", "tableloc2.rds")
 saveRDS(loc_stats3, file = tabloc2_file)
 
 tabgovt_file = here("results", "tablegovt.rds")
@@ -321,7 +321,7 @@ lr_res %>%
 
 #The autoplot function shows basically the process of the tuning process
 lasso_tune_plot <- lr_res %>% autoplot() + ggtitle("LASSO Tuning Process")
-lasso_tune_file = here("results", "lasso_tune_process.png")
+lasso_tune_file = here("results/supp_mat", "lasso_tune_process.png")
 ggsave(filename = lasso_tune_file, plot= lasso_tune_plot)
 
 #This is finding the best model with the lowest rmse
