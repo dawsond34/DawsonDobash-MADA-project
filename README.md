@@ -1,12 +1,12 @@
 # Overview
 
-Here is my MADA project. The information and background for this project is within the introduction section of the manuscript document. I have included the data sets I will possibly use within the raw data folder. I also added some code to the processing script on reading in the data ans showing what the data looks like. 
+Here is my MADA project. The information and background for this project is within the introduction section of the manuscript document. I have included the data sets I will possibly use within the raw data folder. I also added some code to the processing script on reading in the data and showing what the data looks like. 
 
 # Pre-requisites
 
 Please load the R_project called MADA_project.Rproj before running any code. Also check within the data folder there are 9 data sets within the raw data folder. 
 
-To run the code, you first need to run the processing script first in the processing_code folder within the code folder. This will create the cleaned up processed data set from all of the raw data sets. This new processed data set will be put into the processed_data folder. Once we ran the processed script and created the new processed data, we can run the analysis script, and then the main_analysis within the analysis code folder. 
+To run the code, you need to run the processing script first in the processing_code folder within the code folder. This will create the cleaned up processed data set from all of the raw data sets. This new processed data set will be put into the processed_data folder. Once we ran the processed script and created the new processed data, we can run the analysis script, and then the main_analysis within the analysis code folder. 
 
 # Structure
 

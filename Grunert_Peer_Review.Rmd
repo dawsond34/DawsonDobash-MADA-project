@@ -1,0 +1,165 @@
+# Overview
+
+Title of project: MADA Project: COVID-19 Vaccinations and recovery
+
+Name of project author(s): Dawson Dobash
+
+Name of project reviewer: Ryan Grunert
+
+
+# Specific project content evaluation
+Evaluate the different parts of the project by filling in the sections below.
+
+
+## Background, Context and Motivation
+How well is the context of the project described? Is a comprehensive background, including summary of previous/related work given? Is the project well placed into the context of existing work (including proper referencing of existing work). Is it clear why the project was undertaken and what new information it hopes to provide?
+
+### Feedback and Comments
+
+The context of the project is thoroughly described and the reason for investigating this issue is justified as well. Summaries of previous work are given, and are built upon to set the scene for this analysis. It is clear why we need to study COVID-19 vaccination and recovery in order to create some new insights into the spread and mortality rate of the disease. 
+
+Where I could see room for improvement, I suggest editing the introduction at the end in order to state the question clearly and the predictors/outcome you will be looking at. I gathered the information from the abstract initially, I think restating them at the end of the introduction will be beneficial for readers moving into the data description. My only other suggestion would be to edit for grammar throughout the introduction and abstract, it became difficult to figure out what points were being made with some sentences, seemed a little rushed when written. Other than that, great start to the MS.
+
+### Summary assessment 
+* strong contextualization and motivation
+
+
+## Question description
+How well and clear are the question(s)/hypotheses the project aims to address described? Is it clear how the questions relate to the data?
+
+### Feedback and Comments
+
+The questions are clearly stated and looks like they can be answered using the data described in the previous section. Also states confounders that could influence results and answers to the questions. Only suggestion I have here is possibly expanding the "multiple predictors" in the second question by listing a few, but you mention the predictors in the earlier sections so I'm just being nitpicky. The goals for the analysis are clear.
+
+### Summary assessment
+
+* question/hypotheses fully clear
+
+
+## Data description
+How well is the data overall described? Is the source provided? Is a codebook or other meta-information available that makes it clear what the data is? 
+
+### Feedback and Comments
+
+Overall, the data is described well. All sources are provided, although no metadata file is available. Given, the majority of the variables are self-explanatory, but my suggestion would be adding a short metadata file that describes the proportions you created in the processing script. Other than that, your text in the MS regarding the data collection and description is great.
+
+### Summary assessment
+
+* source and overall structure of data somewhat explained
+
+
+## Data wrangling and exploratory analysis
+How well is the data cleaned/processed and explored? Are all steps reasonable and well explained? Are alternatives discussed and considered? Are meaningful exploratory results shown (e.g. in the supplementary materials)?
+
+### Feedback and Comments
+
+Data is cleaned and processed well in the processing script. All of the steps are reproducible and well explained. No alternatives are discussed, but your method for wrangling was justified. You mentioned that you had to alter the csv file directly in order to alter the country names, but the use of the countrynames package was a good addition in order to fit the data together. The meaningful exploratory results are shown in the main manuscript file and are explained well. No qualms there. The supplementary materials are each explained as well. This section was done very well and I don't have much else to say to improve it. 
+
+### Summary assessment
+
+* essentially no weaknesses in wrangling and exploratory component
+
+
+## Appropriateness of Analysis
+Were the analysis methods appropriate for the data? Was the analysis done properly? Were different components of the analysis (e.g. performance measure, variable selection, data pre-processing, model evaluation) done in the best way possible and explained well?
+
+### Feedback and Comments
+
+The analysis methods were appropriate for the data. All of the analysis is completely reproducible, so there are no problems there. Data preparation and model evaluation was done well. The majority of the code in the analysis scripts have comments that explain what each chunk is doing, so that is great also.
+
+One suggestion I have is including what LASSO stands for, and why you are using it for the second question. I don't think you stated either, but I could have missed something. It would help add context for why you are using the model.
+
+### Summary assessment
+
+* strong and reasonable analysis
+
+
+## Presentation
+How well are results presented? Are tables and figures easy to read and understand? Are the main figures/tables publication level quality? 
+
+### Feedback and Comments
+
+The results are presented well and assist the reader in visualizing the data. I don't think they are publication level quality, but they get the job done. One suggestion I have is aligning the titles on the graphs in the middle, and giving a little more context with the tables. The tables present the needed information, although on some of them where there are multiple rows it becomes difficult to figure out which row pertains to which model, etc. Two ways to fix this could just be referencing the numbers for each model in the paragraphs, or altering the tables themselves to have an ID row (the RMSE tables for example). Overall though, well done on creating all the needed graphics.
+
+### Summary assessment
+
+* results are presented ok, with room for improvement
+
+
+## Discussion/Conclusions
+Are the study findings properly discussed? Are strengths and limitations acknowledged? Are findings interpreted properly?
+
+### Feedback and Comments
+
+The study findings are discussed, as well as some strengths and limitations, but not expanded on. Applying your findings to the population at large and focusing on any specific interesting findings you came across would be great additions to this section. The findings are stated and interpreted properly. My other suggestion will be expanded on in the further comments section below, but enough content is present in order to conclude the study successfully.
+
+### Summary assessment
+
+* minor parts wrong, missing or unclear
+
+
+## Further comments
+
+Overall, the project was finished and completely reproducible. The introduction, data collection, data processing and analysis, final manuscript, and supplementary materials are all present in an organized fashion. Code was concise and easy to run.
+
+My main suggestion would be to go back through the manuscript, code scripts, and READMEs to edit the sentences and grammar. In multiple sections throughout the repository, it was difficult to understand what the content of some specific sentences were or the points that were being made. It looked like the majority of the writing was rushed, from my perspective. Going back to re-clarify your points and ideas would strengthen your overall analysis. 
+
+Other than that, great job! This project looked extensive with the multiple data sources and fitting them all together.
+
+
+# Overall project content evaluation
+Evaluate overall features of the project  by filling in the sections below.
+
+
+## Structure
+Is the project well structured? Are files in well labeled folders? Do files have reasonable names? Are all "junk" files not needed for analysis/reproduction removed? By just looking at files and folders, can you get an idea of how things fit together?
+
+### Feedback and Comments
+
+Overall, the project was well structured. All files are in well labeled folders and have reasonable names. All junk files not needed were removed, and I have a great idea of how things all fit together. The only suggestion I have for further improving the structure would be to create separate folders for Figures and Tables in the results folder to organize it a little more, but that's a little nitpicky. Structure of the code in each of the scripts is great as well.
+
+### Summary assessment
+
+* well structured
+
+
+## Documentation 
+How well is the project documented? Are you able to understand each step of the whole analysis, each decision that was made, and each line of code? Is enough information provided as comments in code or as part of Rmd files? 
+
+### Feedback and Comments
+
+The project is documented very well. I was able to understand each step of the entire analysis, each decision that was made, and almost every line of code. There was one section of code in the main_analysis script that didn't have comments explaining what it does, but I know enough about R to figure it out (multivariate regression). Adding in a couple comments there would eliminate that issue. There is enough information provided otherwise in the code or Rmd file for documentation of all the steps.
+
+### Summary assessment
+
+* fully and well documented
+
+
+## Reproducibility
+Are all results fully reproducible? Is documentation provided which clearly explains how to reproduce things, and does it work without the need for any manual intervention? Are you able to re-run the whole analysis without having to do manual interventions/edits?
+
+### Feedback and Comments
+
+All the results are fully reproducible without any issues. READMEs provide enough information for what steps to take to reproduce the analysis, and no manual intervention is needed. I'm able to re-run the entire analysis without editing anything. Nothing to improve here.
+
+### Summary assessment
+
+* fully reproducible without issues
+
+
+## Thoroughness
+How thorough was the overall study? Were alternatives (e.g. different ways of processing the data or different models) considered? Were alternatives discussed? Were the questions/hypotheses fully and thoroughly addressed?
+
+### Feedback and Comments
+
+The study wasn't incredibly thorough, not many alternatives to processing or analyzing the data were discussed. A regression analysis was completed with univariate and multivariate models for the first question, but no other models or processing approaches were tried. My suggestion would be trying a machine learning model like a LASSO regression or a tree/forest just to see if you could get a new result (RMSE, etc.) from a different perspective, instead of just moving onto the next one right away. But it could be that you did, and didn't include it in the final repository. You could also try both bottom-up and top-down subset selection in the multivariate regression analysis, that's another option. Only the LASSO model was used for the second question, but it addressed it thoroughly enough to answer and conclude. 
+
+### Summary assessment
+
+* decent level of thoroughness
+
+
+## Further comments
+
+Overall, very interesting topic and great project! Fully reproducible from beginning to end, and successfully analyzes data from multiple sources to answer the two questions. I think spending a little time addressing the above comments would be beneficial to the overall condition of the project.
+
