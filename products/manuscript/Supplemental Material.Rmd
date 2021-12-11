@@ -45,6 +45,20 @@ tab5=readRDS("../../results/supp_mat/tableloc1.rds")
 knitr::kable(tab5)
 ```
 
+This table shows the correlation matrix used to determine which variables I will use for the step-wise selection in question 1. We see that value which is the health care funds and the gdp per capita are very correlated. Since health care funds has a lot of missing, I decided to use gdp per capita. 
+
+```{r table stepwise corr,  echo=FALSE}
+tab55=readRDS("../../results/supp_mat/cor_tab_prop_diff.rds")
+knitr::kable(tab55)
+```
+
+This table is showing the process of the stepwise selection for the logit transformed difference in proportions. The nvmax means the number of predictors used in each model and each row shows the best model from each quantity of variables used. Although the number of variable shows 12, it is only 6 distinct variables. I used the package caret and the function I used considers each level of nominal variables as a separate variable. This mean the location variable and the government variable is split up by the levels. We can see that nvmax value 3 has the lowest RMSE value which mean it is the best model to use. We can also see that the R-squared values are all very low, which is somethin I addressed in the manuscript. 
+
+```{r table stepwise process,  echo=FALSE}
+tab6=readRDS("../../results/supp_mat/step_proc_tab.rds")
+knitr::kable(tab6)
+```
+
 
 **Supplemental material for question 2**
 

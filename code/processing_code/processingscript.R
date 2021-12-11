@@ -97,6 +97,8 @@ clean_funds2$Country = countrycode(clean_funds2$LOCATION, "iso3c", "country.name
 clean_funds2$Country = ifelse(clean_funds2$Country == "Czechia", "Czech Republic", 
                               ifelse(clean_funds2$Country == "United Kingdom", "UK", clean_funds2$Country))
 
+#This is changing some names of countries to make sure they all combine properly between data sets
+
 gdp <- gdp %>% mutate(ifelse(Country == "United Kingdom", "UK", 
                              ifelse(Country == "Bahamas, The", "Bahamas", 
                                     ifelse(Country == "Brunei Darussalam", "Brunei", 
@@ -113,7 +115,7 @@ gdp <- gdp %>% mutate(ifelse(Country == "United Kingdom", "UK",
                                                                                                                  ifelse(Country == "Korea, Rep.", "South Korea", Country))))))))))))))) %>%
   mutate(Country = `ifelse(...)`) %>% select(-`ifelse(...)`)
 
-#Cleaning the vaccine data set
+#Cleaning the vaccine data set by removing all of the missing values
 
 clean_vaccine = drop_na(vaccine)
 

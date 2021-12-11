@@ -11,7 +11,7 @@ library(here) #for data loading/saving
 library(tidyverse)
 library(AER)
 library(tidymodels)
-
+library(caret)
 
 
 #path to data
@@ -89,7 +89,7 @@ vacc_vs_hc = mydata %>% ggplot(aes(x=Value, y=`% of population fully vaccinated`
 #number of cases.
 prop_diff_recov_died = mydata %>% ggplot(aes(x = prop_diff_recov_vs_death )) + geom_histogram(binwidth = 0.05) + 
   ggtitle("Figure 1.1: Histogram of Difference in proportions \n of those who recovered versus those who died \n (by Country)") + 
-  xlab("Proportion difference between recovery rates and death rates")
+  xlab("Proportion difference between recovery rates and death rates") + theme(plot.title = element_text(hjust=0.5))
 
 
 #Looking at the distribution using a histogram
@@ -166,7 +166,7 @@ mydata$logit_prop_diff = logit(mydata$prop_diff_recov_vs_death)
 #number of cases.
 log_prop_diff_hist = mydata %>% ggplot(aes(x = logit_prop_diff )) + geom_histogram(binwidth = 0.5) + 
   ggtitle("Figure 1.2: Histogram of logit transformation of difference \n in proportions of those who recovered versus those who died \n (by Country)") + 
-  xlab("Logit transformation of the proportional difference between recovory and death rates")
+  xlab("Logit transformation of the proportional difference between recovory and death rates") + theme(plot.title = element_text(hjust=0.5))
 log_prop_diff_hist
 
 #Saving figure * to a location for future references
@@ -220,13 +220,108 @@ tabloc1_file = here("results/supp_mat", "tableloc1.rds")
 saveRDS(loc_stats, file = tabloc1_file)
 
 
+
 #After looking at the models, it looks like the difference between the proportion of recovery and deaths
-#are not affected by the predictor variables. After finding these results and looking at the data, the problem might live within
-#the fact that over half of the difference in proportions are over 0.9. 
+#are not affected by the predictor variables individually. After finding these results and looking at the data, the problem might live within
+#the fact that over half of the difference in proportions are over 0.9. However, I will try a subset selection of manually selecting the predictors
+#and see if a variable become significant.
 
-#Therefore, my next outcome I will look at will be just the case percentage for each country.
+#This is looking at correlations between some predictor variables and our outcome. 
+analysis1_num_data <- mydata %>% select(prop_diff_recov_vs_death, prop_vacc, pct_cases, test_per_person, Value, gdp_per_capita)
+cor_tab_prop_diff = cor(analysis1_num_data, use = "complete.obs")
+cor_file_prop_diff = here("results/supp_mat", "cor_tab_prop_diff.rds")
+saveRDS(cor_tab_prop_diff, file = cor_file_prop_diff)
+
+#We can see that gdp per capita and value which is health care funds. Since health care funds has a lot of missing, 
+#I will use the gdp per capita
+
+#This is subsetting the variables needed for the full model of the logit prop diff
+model_prop_diff_data <- mydata %>% select(logit_prop_diff, prop_vacc, pct_cases, location, test_per_person, gdp_per_capita, government) %>% 
+  filter(complete.cases(.)) %>% mutate(government = as.factor(government),
+                                       government = relevel(government, ref="Republic"))
+
+#Creating the recipe for the full model
+mult_reg_rec2 = recipe(logit_prop_diff ~ ., data=model_prop_diff_data)
+
+#from the model type and recipe just created, I am making a workflow that allows me to make a fit object.
+mult_reg_wrkflow2 <- workflow() %>% add_model(lm_mod) %>% add_recipe(mult_reg_rec2)
+mult_reg_fit2 <- mult_reg_wrkflow2 %>% fit(data = model_prop_diff_data)
+
+#We will be looking at the fitted model statistics
+summ_tab_mult_reg2 <- mult_reg_fit2 %>% extract_fit_parsnip() %>% tidy()
+mult_reg_stats2 = glance(mult_reg_fit2)
+
+#Save table
+tabML3_file = here("results", "Summ_stat_mult_reg2.rds")
+saveRDS(summ_tab_mult_reg2, file = tabML3_file)
+
+tabML4_file = here("results", "Multiple_Reg_tab2.rds")
+saveRDS(mult_reg_stats2, file = tabML4_file)
+
+########### Subset selection (using stepwise selection within the caret package) ###############
+
+set.seed(340)
+
+# Set up repeated 5-fold cross-validation
+train.control <- trainControl(method = "cv", number = 5)
+# Train the model
+step.model <- train(logit_prop_diff ~., data = model_prop_diff_data,
+                    method = "leapSeq", 
+                    tuneGrid = data.frame(nvmax = 1:12),
+                    trControl = train.control
+)
+
+#This is looking at the different models tests. Each nvmax represents the best model statistics for that number of variables included. 
+#The way this function train works is they treat each level of predictor as one variable so even though I only have 6 predictors, there are 12
+#different levels of predictors. 
+step_proc = step.model$results
+step_proc_file = here("results/supp_mat", "step_proc_tab.rds")
+saveRDS(step_proc, file = step_proc_file)
+
+#This shows which nvmax is created the best model
+step.model$bestTune
+
+#This shows the coefficients of the variables selection. As you can see, three variables were selected but two of them are location levels. 
+coef(step.model$finalModel, 3)
+
+### Since looking at the coefficients like the above code shows is strange, I created my own model using the variables selected. 
 
 
+#Creating the recipe for the full model
+stepwise_rec = recipe(logit_prop_diff ~ pct_cases + location, data=model_prop_diff_data)
 
+#from the model type and recipe just created, I am making a workflow that allows me to make a fit object.
+stepwise_wrkflow <- workflow() %>% add_model(lm_mod) %>% add_recipe(stepwise_rec)
+stepwise_fit <- stepwise_wrkflow %>% fit(data = model_prop_diff_data)
 
+#We will be looking at the fitted model statistics
+summ_tab_stepwise <- stepwise_fit %>% extract_fit_parsnip() %>% tidy()
+stepwise_stats = glance(stepwise_fit)
 
+#Save table
+tabstep1_file = here("results", "summ_stepwise_tab.rds")
+saveRDS(summ_tab_stepwise, file = tabstep1_file)
+
+tabstep2_file = here("results", "stepwise_stat_tab.rds")
+saveRDS(stepwise_stats, file = tabstep2_file)
+
+stepwise_model = lm(logit_prop_diff ~ pct_cases + location, data=model_prop_diff_data)
+
+#Scatterplot for predicted versus actual values with a reference line of what a perfect prediction would be.
+stepwise_predvsobs_plot = ggplot(aes(x=logit_prop_diff, y=stepwise_model$fitted.values), data = model_prop_diff_data) + geom_point() + geom_abline(intercept = 0, slope=1) + 
+  ggtitle("Figure 1.3: Scatterplot of predicted values versus the \n observed values of logit transformed difference in proportions of \n recovered and deaths with a reference line showing exact prediction \n (Using stepwise selection)") + 
+  xlab("Logit transformation for the difference in proportion of recovered versus death") + ylab("Predicted values") + theme(plot.title = element_text(hjust=0.5))
+stepwise_predvsobs_plot
+scatt_stepwise_file = here("results", "Pred_vs_obs_stepwise.png")
+ggsave(filename = scatt_stepwise_file, plot= stepwise_predvsobs_plot)
+
+#Residual plot with a reference line that would show a residual value of 0. 
+stepwise_resid_plot <- ggplot(aes(x=stepwise_model$fitted.values, y=stepwise_model$residuals), data = model_prop_diff_data) + geom_point() + geom_hline(yintercept = 0) + 
+  ggtitle("Figure 1.4: Residual plot for Stepwise model") + xlab("Predicted values") + ylab("Residuals") + theme(plot.title = element_text(hjust=0.5))
+stepwise_resid_plot
+resid_stepwise_file = here("results", "Resid_stepwise.png")
+ggsave(filename = resid_stepwise_file, plot= stepwise_resid_plot)
+
+#We can see that percent of cases and the location has significant impact on the logit transformed difference in proportions however, the r-squared
+#values is very low. So even though the variables are significant, if we look at the predicted versus observed values and the residual plot,
+#this is not a good fit.
